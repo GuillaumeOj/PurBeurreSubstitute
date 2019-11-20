@@ -1,8 +1,8 @@
 # What is Pur Beurre Substitute?
 
 The aim of this application is to propose a substitute for a food product.
-The application use the open database provide by the [https://world.openfoodfacts.org/](Open Food Facts).
-This application is made for the project 5 from [https://openclassrooms.com/fr/projects/157/assignment](OpenClassrooms') Python course.
+The application use the open database provide by the [Open Food Facts](https://world.openfoodfacts.org/).
+This application is made for the project 5 from [OpenClassrooms'](https://openclassrooms.com/fr/projects/157/assignment) Python course.
 
 # User documentation
 

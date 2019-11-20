@@ -103,3 +103,7 @@ Quel produit souhaitez-vous consulter ?
 
 The user answers with the associated number.
 If the user gives a wrong answer (```A``` for example), the program ask the question again.
+
+# To do list
+
+See [Trello](https://trello.com/b/W31VG22I/pur-beurre)

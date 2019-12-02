@@ -13,4 +13,15 @@ CREATE TABLE Categories (
     name VARCHAR(150) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
-)
+);
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Brands
+-- ---------------------------------------
+
+CREATE TABLE Brands (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL,
+    url VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
+);

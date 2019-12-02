@@ -35,7 +35,7 @@ CREATE TABLE Stores (
     name VARCHAR(150) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE = INNODB;
 
 -- ---------------------------------------
 -- CREATE A TABLE FOR Traces
@@ -46,7 +46,7 @@ CREATE TABLE Traces (
     name VARCHAR(150) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE = INNODB;
 
 -- ---------------------------------------
 -- CREATE A TABLE FOR Additives
@@ -57,4 +57,16 @@ CREATE TABLE Additives (
     name VARCHAR(150) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Products
+-- ---------------------------------------
+
+CREATE TABLE Additives (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL,
+    common_name VARCHAR(150) NOT NULL,
+    url VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = INNODB;

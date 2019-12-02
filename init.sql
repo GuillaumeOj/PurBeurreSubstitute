@@ -25,3 +25,14 @@ CREATE TABLE Brands (
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
 );
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Stores
+-- ---------------------------------------
+
+CREATE TABLE Stores (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL,
+    url VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
+);

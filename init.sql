@@ -120,3 +120,21 @@ CREATE TABLE Products_brands (
         REFERENCES Brands(id)
         ON DELETE CASCADE
 ) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Products_stores
+-- ---------------------------------------
+
+CREATE TABLE Products_stores (
+    product_id INT UNSIGNED NOT NULL,
+    store_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY(product_id, store_id),
+    CONSTRAINT fk_products_id_for_sto
+        FOREIGN KEY (product_id)
+        REFERENCES Products(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_stores_id
+        FOREIGN KEY (store_id)
+        REFERENCES Stores(id)
+        ON DELETE CASCADE
+) ENGINE = INNODB;

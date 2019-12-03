@@ -156,3 +156,21 @@ CREATE TABLE Products_traces (
         REFERENCES Traces(id)
         ON DELETE CASCADE
 ) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Products_additives
+-- ---------------------------------------
+
+CREATE TABLE Products_additives (
+    product_id INT UNSIGNED NOT NULL,
+    additive_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY(product_id, additive_id),
+    CONSTRAINT fk_products_id_for_add
+        FOREIGN KEY (product_id)
+        REFERENCES Products(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_additives_id
+        FOREIGN KEY (additive_id)
+        REFERENCES Additives(id)
+        ON DELETE CASCADE
+) ENGINE = INNODB;

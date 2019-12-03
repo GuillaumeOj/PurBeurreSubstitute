@@ -93,12 +93,30 @@ CREATE TABLE Products_categories (
     product_id INT UNSIGNED NOT NULL,
     category_id INT UNSIGNED NOT NULL,
     PRIMARY KEY(product_id, category_id),
-    CONSTRAINT fk_products_id
+    CONSTRAINT fk_products_id_for_cat
         FOREIGN KEY (product_id)
         REFERENCES Products(id)
         ON DELETE CASCADE,
     CONSTRAINT fk_categories_id
         FOREIGN KEY (category_id)
         REFERENCES Categories(id)
+        ON DELETE CASCADE
+) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Products_brands
+-- ---------------------------------------
+
+CREATE TABLE Products_brands (
+    product_id INT UNSIGNED NOT NULL,
+    brand_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY(product_id, brand_id),
+    CONSTRAINT fk_products_id_for_bra
+        FOREIGN KEY (product_id)
+        REFERENCES Products(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_brands_id
+        FOREIGN KEY (brand_id)
+        REFERENCES Brands(id)
         ON DELETE CASCADE
 ) ENGINE = INNODB;

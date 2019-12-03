@@ -63,10 +63,14 @@ CREATE TABLE Additives (
 -- CREATE A TABLE FOR Products
 -- ---------------------------------------
 
-CREATE TABLE Additives (
-    id INT UNSIGNED AUTO_INCREMENT,
+CREATE TABLE Products (
+    id INT UNSIGNED,
     name VARCHAR(150) NOT NULL,
     common_name VARCHAR(150) NOT NULL,
+    quantity VARCHAR(50),
+    ingredients_list TEXT,
+    nova_group CHAR(1),
+    nutriscore_grade CHAR(1),
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE = INNODB;

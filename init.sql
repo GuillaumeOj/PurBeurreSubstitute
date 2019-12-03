@@ -64,7 +64,7 @@ CREATE TABLE Additives (
 -- ---------------------------------------
 
 CREATE TABLE Products (
-    id INT UNSIGNED,
+    id INT UNSIGNED NOT NULL,
     name VARCHAR(150) NOT NULL,
     common_name VARCHAR(150) NOT NULL,
     quantity VARCHAR(50),
@@ -83,4 +83,22 @@ CREATE TABLE Users (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL,
     PRIMARY KEY(id)
+) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Products_categories
+-- ---------------------------------------
+
+CREATE TABLE Products_categories (
+    product_id INT UNSIGNED NOT NULL,
+    category_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY(product_id, category_id),
+    CONSTRAINT fk_products_id
+        FOREIGN KEY (product_id)
+        REFERENCES Products(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_categories_id
+        FOREIGN KEY (category_id)
+        REFERENCES Categories(id)
+        ON DELETE CASCADE
 ) ENGINE = INNODB;

@@ -74,3 +74,13 @@ CREATE TABLE Products (
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Users
+-- ---------------------------------------
+
+CREATE TABLE Users (
+    id INT UNSIGNED AUTO_INCREMENT,
+    name VARCHAR(150) NOT NULL,
+    PRIMARY KEY(id)
+) ENGINE = INNODB;

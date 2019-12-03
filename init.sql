@@ -174,3 +174,21 @@ CREATE TABLE Products_additives (
         REFERENCES Additives(id)
         ON DELETE CASCADE
 ) ENGINE = INNODB;
+
+-- ---------------------------------------
+-- CREATE A TABLE FOR Saved_products
+-- ---------------------------------------
+
+CREATE TABLE Saved_products (
+    user_id INT UNSIGNED NOT NULL,
+    product_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY(user_id, product_id),
+    CONSTRAINT fk_user_users_id
+        FOREIGN KEY (user_id)
+        REFERENCES Users(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_product_products_id
+        FOREIGN KEY (product_id)
+        REFERENCES Products(id)
+        ON DELETE CASCADE
+) ENGINE = INNODB;

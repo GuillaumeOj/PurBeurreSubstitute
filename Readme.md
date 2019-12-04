@@ -4,7 +4,25 @@ The aim of this application is to propose a substitute for a food product.
 The application use the open database provide by the [Open Food Facts](https://world.openfoodfacts.org/).
 This application is made for the project 5 from [OpenClassrooms'](https://openclassrooms.com/fr/projects/157/assignment) Python course.
 
-# User documentation
+# How to insall?
+
+Be sure MySQL was installed and works.
+
+Create a user with all privileges:
+```SQL
+CREATE USER 'pbs'@'host' IDENTIFIED BY 'pbs' -- Replace 'host' by the host name on your server
+GRANT ALL ON *.* TO 'pbs'@'host';            -- Don't forget to replace 'host'
+```
+
+With your console go to the directory which contains Pur Beurre Substitute.
+Then run the following command in your console:
+```
+mysql -u pbs -p pbs < init.sql
+```
+This command will create a database named 'PBS' with all associated tables.
+
+
+# How to use?
 
 The first version of this application is built for being used in a terminal's interface.
 The user interacted with it only with his keyboard.

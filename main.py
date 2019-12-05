@@ -23,6 +23,7 @@ def main():
     if not pbs_db.check_database():
         manage_api = ManageApi(API_URL_BASE, TMP_DIR)
         manage_api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
+        manage_api.delete_files()
 
 
 if __name__ == '__main__':

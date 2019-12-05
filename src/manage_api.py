@@ -2,6 +2,7 @@
     This module manage all operations with the api:
 """
 import os
+from shutil import rmtree
 import json
 
 import requests
@@ -73,6 +74,14 @@ class ManageApi:
                 progress_bar.next()
             progress_bar.finish()
         print('Downloading done!')
+
+    def delete_files(self):
+        """
+            This method is called for deleting tmp files
+        """
+        rmtree(self.tmp_dir)
+
+        print('Temp data removed.')
 
 
 

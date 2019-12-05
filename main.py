@@ -18,6 +18,11 @@ def main():
     # Connect to the database
     pbs_db = ManageDatabase(PBS_USER, PBS_HOST, PBS_PASSWORD)
 
+    # Check if database is not empty
+    if not pbs_db.check_database():
+        # The database is empty, so fill it!
+        pass
+
 
 if __name__ == '__main__':
     main()

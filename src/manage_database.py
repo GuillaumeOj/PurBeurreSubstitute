@@ -39,5 +39,22 @@ class ManageDatabase:
             print(err)
             sys.exit()
 
+    def check_database(self):
+        """
+            This method check if the database is empty
+            If it is, run a method for filling it
+        """
+        try:
+            query = 'SELECT * FROM Products LIMIT 1'
+            response = self.cursor.execute(query)
+        except mysql.connector.Error as err:
+            print(err)
+            sys.exit()
+
+        if not response:
+            return False
+
+        return True
+
 if __name__ == '__main__':
     print('Please don\'t load me alone...')

@@ -9,10 +9,10 @@ import mysql.connector
 class ManageDatabase:
     """
         This class manage differents operations with the database like:
-            - Connection
-            - Insert data
-            - Remove data
-            - Select data
+            - connection
+            - insert data
+            - remove data
+            - select data
     """
 
     def __init__(self, user, host, password):
@@ -35,6 +35,7 @@ class ManageDatabase:
                 password=self.password)
 
             self.cursor = self.connection.cursor()
+            self.cursor.execute('USE PBS')
         except mysql.connector.Error as err:
             print(err)
             sys.exit()

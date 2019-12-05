@@ -1,0 +1,81 @@
+"""
+    This module manage all operations with the api:
+"""
+import os
+import json
+
+import requests
+from progress.bar import FillingCirclesBar
+
+
+class ManageApi:
+    """
+        This class manage differents operation with the api:
+            - request data
+            - download data
+            - read data
+    """
+    def __init__(self, url_base, tmp_dir):
+        """
+            Initialize the object with some basics informations
+        """
+
+        self.url_base = url_base
+        self.tmp_dir = tmp_dir
+
+        # Create a tmp/ directory
+        try:
+            os.mkdir(self.tmp_dir)
+        except FileExistsError:
+            print(f'Directory "{self.tmp_dir}" already exist')
+
+    def download_products(self, categories, page_size, pages):
+        """
+            Download products in temp json files
+        """
+        for category in categories:
+            try:
+                dir_path = os.path.join(self.tmp_dir, category)
+                os.mkdir(dir_path)
+            except FileExistsError:
+                print(f'Directory "{dir_path}" already exist')
+
+            # Headers for the request see : https://en.wiki.openfoodfacts.org/API/Read/Search
+            headers = {'User-agent': 'PurBeurreSubstitute - Mac OS X 10.13 - Version 1.0'}
+
+            # Just a little progress bar for seeing the application work
+            progress_bar = FillingCirclesBar(f'Downloading in {dir_path}: ', max=pages)
+            for page in range(pages):
+                # Parameters sent with te request
+                parameters = {'json': 1,
+                              'page_size': page_size,
+                              'page': page,
+                              'categorie': category,
+                              'action': 'process'}
+
+                # File in wich data are saved
+                file_name = f'{page}.json'
+                file_path = os.path.join(dir_path, file_name)
+
+                with open(file_path, 'w') as output_file:
+                    # Load data
+                    try:
+                        response = requests.get(self.url_base,
+                                                params=parameters,
+                                                headers=headers,
+                                                stream=True)
+                        response.raise_for_status()
+                    except requests.HTTPError as err:
+                        print(err)
+
+                    # Write data in a json format
+                    json.dump(response.json(), output_file, indent=4)
+                progress_bar.next()
+            progress_bar.finish()
+        print('Downloading done!')
+
+
+
+
+if __name__ == '__main__':
+    print('Please don\'t load me alone...')

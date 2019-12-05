@@ -6,8 +6,9 @@
         - a database like MySQL,
         - and of course Python.
 """
-from src.manage_database import ManageDatabase
 from src.settings import * # pylint: disable=wildcard-import
+from src.manage_database import ManageDatabase
+from src.manage_api import ManageApi
 
 
 def main():
@@ -20,8 +21,8 @@ def main():
 
     # Check if database is not empty
     if not pbs_db.check_database():
-        # The database is empty, so fill it!
-        pass
+        manage_api = ManageApi(API_URL_BASE, TMP_DIR)
+        manage_api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
 
 
 if __name__ == '__main__':

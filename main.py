@@ -6,9 +6,8 @@
         - a database like MySQL,
         - and of course Python.
 """
-import sys
-
-import mysql.connector
+from src.manage_database import ManageDatabase
+from src.settings import * # pylint: disable=wildcard-import
 
 
 def main():
@@ -17,28 +16,7 @@ def main():
     """
 
     # Connect to the database
-    try:
-        connection = mysql.connector.connect(
-            host='localhost',
-            user='pbs',
-            password='pbs')
-        cursor = connection.cursor()
-        cursor.execute('USE PBS')
-    except mysql.connector.Error as err:
-        print(err)
-        sys.exit()
-
-
-    # Check if there is some products in database
-    try:
-        query = 'SELECT * FROM Products LIMIT 1'
-        products = cursor.execute(query)
-        if not products:
-            # Run the database filling!
-            pass
-    except mysql.connector.Error as err:
-        print(err)
-        sys.exit()
+    pbs_db = ManageDatabase(PBS_USER, PBS_HOST, PBS_PASSWORD)
 
 
 if __name__ == '__main__':

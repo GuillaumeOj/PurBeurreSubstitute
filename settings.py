@@ -19,3 +19,4 @@ API_CATEGORIES = ['aliments-d-origine-vegetale',
                   'boissons',
                   'confiseries',
                   'produits-laitiers']
+API_SORT = 'product_name'

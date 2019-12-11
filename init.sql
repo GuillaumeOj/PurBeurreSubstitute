@@ -64,7 +64,8 @@ CREATE TABLE Additives (
 -- ---------------------------------------
 
 CREATE TABLE Products (
-    id INT UNSIGNED NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT,
+    id_ext INT UNSIGNED NOT NULL,
     name VARCHAR(150) NOT NULL,
     common_name VARCHAR(150) NOT NULL,
     quantity VARCHAR(50),

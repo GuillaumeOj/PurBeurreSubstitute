@@ -6,7 +6,7 @@
         - a database like MySQL,
         - and of course Python.
 """
-from src.settings import * # pylint: disable=wildcard-import
+from settings import * # pylint: disable=wildcard-import
 from src.manage_database import ManageDatabase
 from src.manage_api import ManageApi
 

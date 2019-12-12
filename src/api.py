@@ -9,7 +9,7 @@ import requests
 from progress.bar import FillingCirclesBar
 
 
-class ManageApi:
+class Api:
     """
         This class manage differents operation with the api:
             - request data

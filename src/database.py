@@ -6,7 +6,7 @@ import sys
 import mysql.connector
 
 
-class ManageDatabase:
+class Database:
     """
         This class manage differents operations with the database like:
             - connection

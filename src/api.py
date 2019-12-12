@@ -82,6 +82,27 @@ class Api:
             progress_bar.finish()
         print('Downloading done!')
 
+    def read_json_with_key(self, key):
+        """
+            This method read json files and return only data on specific key
+        """
+        data = list()
+        for category in self.categories:
+            for page in range(self.pages):
+                # Create a path for the file
+                file_name = f'{page}.json'
+                file_path = path.join(self.tmp_dir, category, file_name)
+
+                # Read the JSON file
+                with open(file_path, 'r') as file:
+                    json_data = json.load(file)
+
+                    # Store data in list
+                    for line in json_data[key]:
+                        data.append(line)
+
+        return data
+
     def delete_files(self):
         """
             This method is called for deleting tmp files

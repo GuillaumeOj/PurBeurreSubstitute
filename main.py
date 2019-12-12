@@ -21,8 +21,13 @@ def main():
 
     # Check if database is not empty
     if not pbs_db.check_database():
+        # Initialize the API
         api = Api(API_URL_BASE, TMP_DIR)
+        # Download data with the API
         api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
+
+        # Read and filter data downloaded
+        products = api.read_json_with_key('products')
         api.delete_files()
 
 

@@ -132,9 +132,12 @@ See [Trello](https://trello.com/b/W31VG22I/pur-beurre)
 Th application analyze the database to know if its empty or not. If its empty, the application download the data.
 All data is downloaded from the [Open Food Fact API](https://fr.openfoodfacts.org/) as JSON files in a ```tmp/``` directory.
 Then the application fill the database with those JSON files. Each products are analysed with this method:
-- Is there a product name?
-- Is there a bar code?
-- Is there a nutriscore?
-- And is there a nova score?
+- Is there a ```product_name```?
+- Is there a ```code```?
+- Is there a ```nutriscore_grade```?
+- Is there a ```nova_group```?
+- And is there an `url`?
+
+We also check the value for ```categories_lc``` is ```fr```.
 
 If all these criteria are satisfied, the product is registered in the database. Otherwise it is ignored.

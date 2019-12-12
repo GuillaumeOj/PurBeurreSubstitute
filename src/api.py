@@ -17,10 +17,6 @@ class Api:
             - read data
     """
     def __init__(self, url_base, tmp_dir):
-        """
-            Initialize the object with some basics informations
-        """
-
         self.url_base = url_base
         self.tmp_dir = tmp_dir
         self.categories = list()

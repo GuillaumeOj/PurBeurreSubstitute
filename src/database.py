@@ -16,13 +16,6 @@ class Database:
     """
 
     def __init__(self, user, host, password):
-        """
-            initialize the object with some important informations:
-                - user name
-                - host name
-                - password
-        """
-
         self.user = user
         self.host = host
         self.password = password

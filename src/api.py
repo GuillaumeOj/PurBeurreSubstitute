@@ -103,6 +103,7 @@ class Api:
 
         return data
 
+
     def delete_files(self):
         """
             This method is called for deleting tmp files

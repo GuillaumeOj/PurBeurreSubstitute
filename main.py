@@ -9,6 +9,7 @@
 from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.api import Api
+from src.util import clear_data
 
 
 def main():
@@ -26,8 +27,13 @@ def main():
         # Download data with the API
         api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
 
-        # Read and filter data downloaded
-        products = api.read_json_with_key('products')
+        # Read data downloaded
+        products_list = api.read_json_with_key('products')
+
+        # Filter data by deleting products without required keys and values
+        products_list = clear_data(products_list, *REQUIRED_KEYS, **REQUIRED_VALUES)
+
+        # Delete temporary files
         api.delete_files()
 
 

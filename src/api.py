@@ -1,7 +1,7 @@
 """
     This module manage all operations with the api:
 """
-import os
+from os import path, mkdir
 from shutil import rmtree
 import json
 
@@ -29,7 +29,7 @@ class Api:
 
         # Create a tmp/ directory
         try:
-            os.mkdir(self.tmp_dir)
+            mkdir(self.tmp_dir)
         except FileExistsError:
             print(f'Directory "{self.tmp_dir}" already exist')
 
@@ -43,8 +43,8 @@ class Api:
 
         for category in self.categories:
             try:
-                dir_path = os.path.join(self.tmp_dir, category)
-                os.mkdir(dir_path)
+                dir_path = path.join(self.tmp_dir, category)
+                mkdir(dir_path)
             except FileExistsError:
                 print(f'Directory "{dir_path}" already exist')
 
@@ -63,7 +63,7 @@ class Api:
 
                 # File in wich data are saved
                 file_name = f'{page}.json'
-                file_path = os.path.join(dir_path, file_name)
+                file_path = path.join(dir_path, file_name)
 
                 with open(file_path, 'w') as output_file:
                     # Load data

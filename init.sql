@@ -38,28 +38,6 @@ CREATE TABLE Stores (
 ) ENGINE = INNODB;
 
 -- ---------------------------------------
--- CREATE A TABLE FOR Traces
--- ---------------------------------------
-
-CREATE TABLE Traces (
-    id INT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(150) NOT NULL,
-    url VARCHAR(250) NOT NULL,
-    PRIMARY KEY(id)
-) ENGINE = INNODB;
-
--- ---------------------------------------
--- CREATE A TABLE FOR Additives
--- ---------------------------------------
-
-CREATE TABLE Additives (
-    id INT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(150) NOT NULL,
-    url VARCHAR(250) NOT NULL,
-    PRIMARY KEY(id)
-) ENGINE = INNODB;
-
--- ---------------------------------------
 -- CREATE A TABLE FOR Products
 -- ---------------------------------------
 
@@ -137,42 +115,6 @@ CREATE TABLE Products_stores (
     CONSTRAINT fk_stores_id
         FOREIGN KEY (store_id)
         REFERENCES Stores(id)
-        ON DELETE CASCADE
-) ENGINE = INNODB;
-
--- ---------------------------------------
--- CREATE A TABLE FOR Products_traces
--- ---------------------------------------
-
-CREATE TABLE Products_traces (
-    product_id INT UNSIGNED NOT NULL,
-    trace_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY(product_id, trace_id),
-    CONSTRAINT fk_products_id_for_tra
-        FOREIGN KEY (product_id)
-        REFERENCES Products(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_traces_id
-        FOREIGN KEY (trace_id)
-        REFERENCES Traces(id)
-        ON DELETE CASCADE
-) ENGINE = INNODB;
-
--- ---------------------------------------
--- CREATE A TABLE FOR Products_additives
--- ---------------------------------------
-
-CREATE TABLE Products_additives (
-    product_id INT UNSIGNED NOT NULL,
-    additive_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY(product_id, additive_id),
-    CONSTRAINT fk_products_id_for_add
-        FOREIGN KEY (product_id)
-        REFERENCES Products(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_additives_id
-        FOREIGN KEY (additive_id)
-        REFERENCES Additives(id)
         ON DELETE CASCADE
 ) ENGINE = INNODB;
 

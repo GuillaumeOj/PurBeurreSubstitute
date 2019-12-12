@@ -10,6 +10,7 @@ from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.api import Api
 from src.util import clear_data
+from src.product import Product
 
 
 def main():
@@ -32,6 +33,10 @@ def main():
 
         # Filter data by deleting products without required keys and values
         products_list = clear_data(products_list, *REQUIRED_KEYS, **REQUIRED_VALUES)
+
+        # Define each product as an object with variables attributes
+        for line in products_list:
+            Product(**line)
 
         # Delete temporary files
         api.delete_files()

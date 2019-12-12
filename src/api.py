@@ -23,6 +23,9 @@ class Api:
 
         self.url_base = url_base
         self.tmp_dir = tmp_dir
+        self.categories = list()
+        self.page_size = int()
+        self.pages = int()
 
         # Create a tmp/ directory
         try:
@@ -34,7 +37,11 @@ class Api:
         """
             Download products in temp json files
         """
-        for category in categories:
+        self.categories = categories
+        self.page_size = page_size
+        self.pages = pages
+
+        for category in self.categories:
             try:
                 dir_path = os.path.join(self.tmp_dir, category)
                 os.mkdir(dir_path)
@@ -45,11 +52,11 @@ class Api:
             headers = {'User-agent': 'PurBeurreSubstitute - Mac OS X 10.13 - Version 1.0'}
 
             # Just a little progress bar for seeing the application work
-            progress_bar = FillingCirclesBar(f'Downloading in {dir_path}: ', max=pages)
-            for page in range(pages):
+            progress_bar = FillingCirclesBar(f'Downloading in {dir_path}: ', max=self.pages)
+            for page in range(self.pages):
                 # Parameters sent with te request
                 parameters = {'json': 1,
-                              'page_size': page_size,
+                              'page_size': self.page_size,
                               'page': page,
                               'categorie': category,
                               'action': 'process'}

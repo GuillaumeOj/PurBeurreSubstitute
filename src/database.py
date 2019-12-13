@@ -1,8 +1,6 @@
 """
     This module manage all operations with the database
 """
-import sys
-
 import mysql.connector
 
 
@@ -31,7 +29,6 @@ class Database:
             self.cursor.execute('USE PBS')
         except mysql.connector.Error as err:
             print(err)
-            sys.exit()
 
     def check_database(self):
         """
@@ -43,7 +40,6 @@ class Database:
             response = self.cursor.execute(query)
         except mysql.connector.Error as err:
             print(err)
-            sys.exit()
 
         if not response:
             return False

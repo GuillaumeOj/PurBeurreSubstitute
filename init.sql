@@ -11,7 +11,8 @@ USE PBS;
 CREATE TABLE Categories (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE INDEX ind_cat_name(name)
 );
 
 -- ---------------------------------------
@@ -21,7 +22,9 @@ CREATE TABLE Categories (
 CREATE TABLE Brands (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE INDEX ind_brand_name(name)
+
 );
 
 -- ---------------------------------------
@@ -31,7 +34,8 @@ CREATE TABLE Brands (
 CREATE TABLE Stores (
     id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE INDEX ind_store_name(name)
 ) ENGINE = INNODB;
 
 -- ---------------------------------------

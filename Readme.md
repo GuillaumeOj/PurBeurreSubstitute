@@ -129,6 +129,8 @@ See [Trello](https://trello.com/b/W31VG22I/pur-beurre)
 
 ## First start
 
+### Download and filter the data
+
 Th application analyze the database to know if its empty or not. If its empty, the application download the data.
 All data is downloaded from the [Open Food Fact API](https://fr.openfoodfacts.org/) as JSON files in a ```tmp/``` directory.
 Then the application fill the database with those JSON files. Each products are analysed with this method:
@@ -140,4 +142,7 @@ Then the application fill the database with those JSON files. Each products are 
 
 We also check the value for ```categories_lc``` is ```fr```.
 
-If all these criteria are satisfied, the product is registered in the database. Otherwise it is ignored.
+### Insert data in the database
+
+If all these criteria are satisfied, the product is registered in the database.
+If a product is duplicated, for example ```Nutella``` in differrent quantity (big, medium and little pot) or with the same barcode, the application may update the database with the most recently updated product.

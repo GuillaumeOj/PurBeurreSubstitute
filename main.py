@@ -10,6 +10,7 @@ from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.api import Api
 from src.util import clear_data
+from src.util import string_to_list
 from src.product import Product
 
 
@@ -37,6 +38,30 @@ def main():
         # Define each product as an object with variables attributes
         for line in products_list:
             Product(**line)
+
+        # Insert products in the database
+        for product in Product.products:
+            # First insert categories
+            query = ('INSERT INTO Categories'
+                     '(name)'
+                     'VALUES (%s)')
+            values = string_to_list(product.categories)
+            pbs_db.insert_in_database(query, values)
+
+            # Second insert brands
+            query = ('INSERT INTO Brands'
+                     '(name)'
+                     'VALUES (%s)')
+            values = string_to_list(product.brands)
+            pbs_db.insert_in_database(query, values)
+
+            # Third insert stores
+            if hasattr(product, 'stores'):
+                query = ('INSERT INTO Stores'
+                         '(name)'
+                         'VALUES (%s)')
+                values = string_to_list(product.stores)
+                pbs_db.insert_in_database(query, values)
 
         # Delete temporary files
         api.delete_files()

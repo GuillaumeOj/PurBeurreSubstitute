@@ -62,5 +62,18 @@ class Database:
 
         return True
 
+    def insert_in_database(self, query, values):
+        """
+            This method insert in the database with "query" as argument and an optionnal crieterion
+            to manage possible duplicates entry
+        """
+        for value in values:
+            try:
+                self.cursor.execute(query, value)
+                self.connection.commit()
+            except mysql.connector.Error as err:
+                if err.errno != 1062:
+                    print(err)
+
 if __name__ == '__main__':
     print('Please don\'t load me alone...')

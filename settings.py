@@ -3,6 +3,7 @@
 """
 
 # MySQL informations
+PBS_DB_NAME = 'PBS'
 PBS_USER = 'pbs'
 PBS_HOST = 'localhost'
 PBS_PASSWORD = 'pbs'

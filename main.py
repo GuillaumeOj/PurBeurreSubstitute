@@ -19,10 +19,10 @@ def main():
     """
 
     # Connect to the database
-    pbs_db = Database(PBS_USER, PBS_HOST, PBS_PASSWORD)
+    pbs_db = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
 
     # Check if database is not empty
-    if not pbs_db.check_database():
+    if pbs_db.connect_databse() and not pbs_db.check_database():
         # Initialize the API
         api = Api(API_URL_BASE, TMP_DIR)
         # Download data with the API

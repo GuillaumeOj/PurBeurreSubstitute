@@ -2,6 +2,7 @@
     This module manage all operations with the database
 """
 import mysql.connector
+from mysql.connector import errorcode
 
 
 class Database:
@@ -13,22 +14,37 @@ class Database:
             - select data
     """
 
-    def __init__(self, user, host, password):
+    def __init__(self, db_name, user, host, password):
+        self.db_name = db_name
         self.user = user
         self.host = host
         self.password = password
+        self.connection = False
+        self.cursor = False
+
+    def connect_databse(self):
+        """
+            This method connect the application to the database
+        """
 
         # Connect to the database
         try:
             self.connection = mysql.connector.connect(
                 user=self.user,
                 host=self.host,
-                password=self.password)
-
-            self.cursor = self.connection.cursor()
-            self.cursor.execute('USE PBS')
+                password=self.password,
+                database=self.db_name)
         except mysql.connector.Error as err:
-            print(err)
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print('Login informations are wrong. Please check "settings.py".')
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print('The database does\'nt exist. Please check "settings.py".')
+            else:
+                print('Something wrong happen...')
+            return False
+        else:
+            self.cursor = self.connection.cursor(buffered=True)
+            return True
 
     def check_database(self):
         """

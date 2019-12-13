@@ -45,11 +45,11 @@ CREATE TABLE Products (
     id INT UNSIGNED AUTO_INCREMENT,
     id_ext INT UNSIGNED NOT NULL,
     name VARCHAR(150) NOT NULL,
-    common_name VARCHAR(150) NOT NULL,
+    common_name VARCHAR(150),
     quantity VARCHAR(50),
     ingredients_list TEXT,
-    nova_group CHAR(1),
-    nutriscore_grade CHAR(1),
+    nova_group CHAR(1) NOT NULL,
+    nutriscore_grade CHAR(1) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
 ) ENGINE = INNODB;

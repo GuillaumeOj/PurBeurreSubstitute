@@ -45,23 +45,34 @@ def main():
             query = ('INSERT INTO Categories'
                      '(name)'
                      'VALUES (%s)')
-            values = string_to_list(product.categories)
-            pbs_db.insert_in_database(query, values)
+            values_list = string_to_list(product.categories)
+            for values in values_list:
+                pbs_db.insert_in_database(query, values)
 
             # Second insert brands
             query = ('INSERT INTO Brands'
                      '(name)'
                      'VALUES (%s)')
-            values = string_to_list(product.brands)
-            pbs_db.insert_in_database(query, values)
+            values_list = string_to_list(product.brands)
+            for values in values_list:
+                pbs_db.insert_in_database(query, values)
 
             # Third insert stores
             if hasattr(product, 'stores'):
                 query = ('INSERT INTO Stores'
                          '(name)'
                          'VALUES (%s)')
-                values = string_to_list(product.stores)
-                pbs_db.insert_in_database(query, values)
+                values_list = string_to_list(product.stores)
+                for values in values_list:
+                    pbs_db.insert_in_database(query, values)
+
+            # Then insert the product
+            query = ('INSERT INTO Products'
+                     '(id_ext, name, common_name, quantity, ingredients_list, nova_group,'
+                     'nutriscore_grade, url)'
+                     'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)')
+            values = product.attributes_to_tuple(PRODUCT_ATTR_ORDER, PRODUCT_ATTR_TYPE)
+            pbs_db.insert_in_database(query, values)
 
         # Delete temporary files
         api.delete_files()

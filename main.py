@@ -10,7 +10,6 @@ from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.api import Api
 from src.util import clear_data
-from src.util import string_to_list
 from src.product import Product
 
 
@@ -45,26 +44,26 @@ def main():
             query = ('INSERT INTO Categories'
                      '(name)'
                      'VALUES (%s)')
-            values_list = string_to_list(product.categories)
-            for values in values_list:
-                pbs_db.insert_in_database(query, values)
+            product.categories = product.attribute_to_list('categories')
+            for element in product.categories:
+                pbs_db.insert_in_database(query, element)
 
             # Second insert brands
             query = ('INSERT INTO Brands'
                      '(name)'
                      'VALUES (%s)')
-            values_list = string_to_list(product.brands)
-            for values in values_list:
-                pbs_db.insert_in_database(query, values)
+            product.brands = product.attribute_to_list('brands')
+            for element in product.brands:
+                pbs_db.insert_in_database(query, element)
 
             # Third insert stores
             if hasattr(product, 'stores'):
                 query = ('INSERT INTO Stores'
                          '(name)'
                          'VALUES (%s)')
-                values_list = string_to_list(product.stores)
-                for values in values_list:
-                    pbs_db.insert_in_database(query, values)
+                product.stores = product.attribute_to_list('stores')
+                for element in product.stores:
+                    pbs_db.insert_in_database(query, element)
 
             # Then insert the product
             query = ('INSERT INTO Products'

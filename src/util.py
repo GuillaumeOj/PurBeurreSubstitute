@@ -24,20 +24,6 @@ def clear_data(dataset, *required_keys, **required_values):
 
     return dataset
 
-def string_to_list(string, separator=','):
-    """
-        This function transform a string into a list and clean the data for using with SQL requests
-    """
-    list_of_elements = string.split(separator)
-    for i, element in enumerate(list_of_elements):
-        element = element.strip()
-        if element:
-            list_of_elements[i] = (element,)
-        else:
-            list_of_elements.pop(i)
-
-    return list_of_elements
-
 
 
 if __name__ == '__main__':

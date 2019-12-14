@@ -14,6 +14,20 @@ class Product:
 
         Product.products.append(self)
 
+    def attribute_to_list(self, attribute_name, separator=','):
+        """
+            This method transform an attribute from a string to a list
+        """
+        list_of_elements = getattr(self, attribute_name).split(separator)
+        for i, element in enumerate(list_of_elements):
+            element = element.strip()
+            if element:
+                list_of_elements[i] = (element,)
+            else:
+                list_of_elements.pop(i)
+
+        return list_of_elements
+
     def attributes_to_tuple(self, attributes_order, attributes_type):
         """
             This method transfrom attributes in tuples for insertion in a database

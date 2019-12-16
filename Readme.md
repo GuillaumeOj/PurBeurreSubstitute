@@ -21,6 +21,38 @@ mysql -u pbs -p pbs < init.sql
 ```
 This command will create a database named 'PBS' with all associated tables.
 
+Then clone this repository on your computer. Run :
+```
+git clone git@github.com:GuillaumeOj/PurBeurreSubstitute.git
+or
+git clone https://github.com/GuillaumeOj/PurBeurreSubstitute.git
+```
+Create a virtual environement in your directory:
+```
+virtualenv -p python3 env
+```
+or for PowerShell:
+```powershell
+virtualenv -p $env:python3 env
+```
+Activate your virtual environement:
+```
+source env/bin/activate
+```
+or for PowerShell:
+```powershell
+.env/scripts/activate.ps1
+```
+Install `requirements.txt`:
+```
+pip install -r requirements.txt
+```
+Run `main.py`:
+```
+python main.py
+```
+Enjoy the app !
+
 
 # How to use?
 

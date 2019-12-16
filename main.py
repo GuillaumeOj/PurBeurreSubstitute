@@ -75,6 +75,16 @@ def main():
             values = product.attributes_to_tuple(PRODUCT_ATTR_ORDER, PRODUCT_ATTR_TYPE)
             pbs_db.insert_in_database(query, values)
 
+            # Insert products categories
+            query = ('INSERT INTO Products_categories'
+                     '(product_id, category_id)'
+                     'VALUES'
+                     '((SELECT id FROM Products WHERE name=%s),'
+                     '(SELECT id FROM Categories WHERE name=%s))')
+            for category in product.categories:
+                values = (product.product_name, category)
+                pbs_db.insert_in_database(query, values)
+
         # Delete temporary files
         api.delete_files()
 

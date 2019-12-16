@@ -85,6 +85,26 @@ def main():
                 values = (product.product_name, category)
                 pbs_db.insert_in_database(query, values)
 
+            # Insert products brands
+            query = ('INSERT INTO Products_brands'
+                     '(product_id, brand_id)'
+                     'VALUES'
+                     '((SELECT id FROM Products WHERE name=%s),'
+                     '(SELECT id FROM Brands WHERE name=%s))')
+            for brand in product.brands:
+                values = (product.product_name, brand)
+                pbs_db.insert_in_database(query, values)
+
+            # Insert products stores
+            query = ('INSERT INTO Products_stores'
+                     '(product_id, store_id)'
+                     'VALUES'
+                     '((SELECT id FROM Products WHERE name=%s),'
+                     '(SELECT id FROM Stores WHERE name=%s))')
+            for store in product.stores:
+                values = (product.product_name, store)
+                pbs_db.insert_in_database(query, values)
+
         # Delete temporary files
         api.delete_files()
 

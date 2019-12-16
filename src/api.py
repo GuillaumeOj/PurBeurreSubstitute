@@ -106,17 +106,14 @@ class Api:
             for key in required_keys:
                 if not key in data.keys():
                     self.data.pop(i)
-                    # print(f'Product remove because "{key}" is not defined.')
                     removed = True
                     break
             if not removed:
                 for key, value in required_values.items():
                     if data[key] != value:
                         self.data.pop(i)
-                        # print(f'Product remove because "{key}" is not equal to "{value}"')
                         removed = True
                         break
-
 
     def delete_files(self):
         """
@@ -125,8 +122,6 @@ class Api:
         rmtree(self.tmp_dir)
 
         print('Temp data removed.')
-
-
 
 
 if __name__ == '__main__':

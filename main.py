@@ -9,7 +9,6 @@
 from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.api import Api
-from src.util import clear_data
 from src.product import Product
 
 
@@ -29,13 +28,13 @@ def main():
         api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
 
         # Read data downloaded
-        products_list = api.read_json_with_key('products')
+        api.read_json_with_key('products')
 
         # Filter data by deleting products without required keys and values
-        products_list = clear_data(products_list, *REQUIRED_KEYS, **REQUIRED_VALUES)
+        api.clear_data(*REQUIRED_KEYS, **REQUIRED_VALUES)
 
         # Define each product as an object with variables attributes
-        for line in products_list:
+        for line in api.data:
             Product(**line)
 
         # Insert products in the database

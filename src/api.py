@@ -22,6 +22,7 @@ class Api:
         self.categories = list()
         self.page_size = int()
         self.pages = int()
+        self.data = list()
 
         # Create a tmp/ directory
         try:
@@ -82,7 +83,6 @@ class Api:
         """
             This method read json files and return only data on specific key
         """
-        data = list()
         for category in self.categories:
             for page in range(self.pages):
                 # Create a path for the file
@@ -95,9 +95,27 @@ class Api:
 
                     # Store data in list
                     for line in json_data[key]:
-                        data.append(line)
+                        self.data.append(line)
 
-        return data
+    def clear_data(self, *required_keys, **required_values):
+        """
+            Function for remove products without required keys
+        """
+        for i, data in enumerate(self.data):
+            removed = False
+            for key in required_keys:
+                if not key in data.keys():
+                    self.data.pop(i)
+                    # print(f'Product remove because "{key}" is not defined.')
+                    removed = True
+                    break
+            if not removed:
+                for key, value in required_values.items():
+                    if data[key] != value:
+                        self.data.pop(i)
+                        # print(f'Product remove because "{key}" is not equal to "{value}"')
+                        removed = True
+                        break
 
 
     def delete_files(self):

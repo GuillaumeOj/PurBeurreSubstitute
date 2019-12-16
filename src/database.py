@@ -41,10 +41,8 @@ class Database:
                 print('The database does\'nt exist. Please check "settings.py".')
             else:
                 print('Something wrong happen...')
-            return False
         else:
             self.cursor = self.connection.cursor(buffered=True)
-            return True
 
     def check_database(self):
         """
@@ -53,14 +51,11 @@ class Database:
         """
         try:
             query = 'SELECT * FROM Products LIMIT 1'
-            response = self.cursor.execute(query)
+            self.cursor.execute(query)
         except mysql.connector.Error as err:
             print(err)
 
-        if not response:
-            return False
-
-        return True
+        return self.cursor.fetchone()
 
     def insert_in_database(self, query, values):
         """

@@ -52,7 +52,8 @@ CREATE TABLE Products (
     nova_group TINYINT NOT NULL,
     nutriscore_grade CHAR(1) NOT NULL,
     url VARCHAR(250) NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    UNIQUE INDEX ind_product_name(name)
 ) ENGINE = INNODB;
 
 -- ---------------------------------------

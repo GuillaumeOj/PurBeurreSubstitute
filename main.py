@@ -45,7 +45,8 @@ def main():
                      'VALUES (%s)')
             product.categories = product.attribute_to_list('categories')
             for element in product.categories:
-                pbs_db.insert_in_database(query, element)
+                values = (element,)
+                pbs_db.insert_in_database(query, values)
 
             # Second insert brands
             query = ('INSERT INTO Brands'
@@ -53,7 +54,8 @@ def main():
                      'VALUES (%s)')
             product.brands = product.attribute_to_list('brands')
             for element in product.brands:
-                pbs_db.insert_in_database(query, element)
+                values = (element,)
+                pbs_db.insert_in_database(query, values)
 
             # Third insert stores
             if hasattr(product, 'stores'):
@@ -62,7 +64,8 @@ def main():
                          'VALUES (%s)')
                 product.stores = product.attribute_to_list('stores')
                 for element in product.stores:
-                    pbs_db.insert_in_database(query, element)
+                    values = (element,)
+                    pbs_db.insert_in_database(query, values)
 
             # Then insert the product
             query = ('INSERT INTO Products'

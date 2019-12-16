@@ -22,7 +22,7 @@ class Product:
         for i, element in enumerate(list_of_elements):
             element = element.strip()
             if element:
-                list_of_elements[i] = (element,)
+                list_of_elements[i] = element
             else:
                 list_of_elements.pop(i)
 

@@ -45,8 +45,8 @@ CREATE TABLE Stores (
 CREATE TABLE Products (
     id INT UNSIGNED AUTO_INCREMENT,
     id_ext BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(150) NOT NULL,
-    common_name VARCHAR(150),
+    name VARCHAR(200) NOT NULL,
+    common_name VARCHAR(200),
     quantity VARCHAR(50),
     ingredients_list TEXT,
     nova_group TINYINT NOT NULL,

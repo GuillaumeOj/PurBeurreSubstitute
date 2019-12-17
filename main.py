@@ -129,8 +129,26 @@ def main():
         for (name,) in result:
             choices.append(name)
 
+        # Get the user answer for the choosen category
         categories = SelectionMenu(*choices)
         categories.display_choices('Choisissez une catégorie')
+        categories.user_input('Sélectionner un catégorie (numéro)')
+
+        # Display available products in the chossen category
+        query = ("""SELECT Products.name FROM Products
+                 INNER JOIN Products_categories ON Products_categories.product_id = Products.id
+                 INNER JOIN Categories ON Products_categories.category_id = Categories.id
+                 WHERE Categories.name = %s
+                 ORDER BY RAND() LIMIT 15""")
+        result = pbs_db.select_in_database(query, (str(categories.choosen), ))
+        choices = list()
+        for (name,) in result:
+            choices.append(name)
+
+        # Get the user answer for the choosen product
+        products = SelectionMenu(*choices)
+        products.display_choices('Choisissez un produit')
+        products.user_input('Sélectionnez un produit (numéro)')
         break
     pbs_db.close_database()
 

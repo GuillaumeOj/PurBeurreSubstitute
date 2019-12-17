@@ -10,6 +10,7 @@ from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.api import Api
 from src.product import Product
+from src.interface import SelectionMenu
 
 
 def main():
@@ -118,6 +119,19 @@ def main():
 
         # Delete temporary files
         api.delete_files()
+
+    # Here start the application
+    while True:
+        # Display available categories
+        query = ('SELECT name FROM Categories ORDER BY RAND() LIMIT 10')
+        result = pbs_db.select_in_database(query)
+        choices = list()
+        for (name,) in result:
+            choices.append(name)
+
+        categories = SelectionMenu(*choices)
+        categories.display_choices('Choisissez une catégorie')
+        break
     pbs_db.close_database()
 
 

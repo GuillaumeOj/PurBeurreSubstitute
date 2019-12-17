@@ -68,6 +68,17 @@ class Database:
             if err.errno != 1062: # Duplicates entries
                 print(err)
 
+    def select_in_database(self, query, values=None):
+        """
+            This method select data in the database
+        """
+        try:
+            self.cursor.execute(query, values)
+        except mysql.connector.Error as err:
+            print(err)
+
+        return self.cursor
+
     def close_database(self):
         """
             This method is called for closing the connection with the database

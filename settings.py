@@ -20,30 +20,3 @@ API_CATEGORIES = ['aliments-d-origine-vegetale',
                   'boissons',
                   'confiseries',
                   'produits-laitiers']
-
-# Required keys for each products
-REQUIRED_KEYS = ['product_name',
-                 'code',
-                 'nutriscore_grade',
-                 'nova_group',
-                 'url',
-                 'categories_lc']
-REQUIRED_VALUES = {'categories_lc': 'fr'}
-
-# Attributes for insert a product in the database
-PRODUCT_ATTR_ORDER = {'1': 'product_name',
-                      '0': 'code',
-                      '6': 'nutriscore_grade',
-                      '5': 'nova_group',
-                      '7': 'url',
-                      '2': 'generic_name_fr',
-                      '3': 'quantity',
-                      '4': 'ingredients_text'}
-PRODUCT_ATTR_TYPE = {'product_name': 'str',
-                     'code': 'int',
-                     'nutriscore_grade': 'str',
-                     'nova_group': 'int',
-                     'url': 'str',
-                     'generic_name_fr': 'str',
-                     'quantity': 'str',
-                     'ingredients_text': 'str'}

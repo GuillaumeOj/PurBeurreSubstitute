@@ -36,11 +36,10 @@ class Database:
                 database=self.db_name)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                print('Login informations are wrong. Please check "settings.py".')
-            elif err.errno == errorcode.ER_BAD_DB_ERROR:
-                print('The database does\'nt exist. Please check "settings.py".')
-            else:
-                print('Something wrong happen...')
+                raise Exception(f'Login informations are wrong. Please check "settings.py".\n{err}')
+            if err.errno == errorcode.ER_BAD_DB_ERROR:
+                raise Exception(f'The database does\'nt exist. Please check "settings.py".\n{err}')
+            raise err
         else:
             self.cursor = self.connection.cursor(buffered=True)
 

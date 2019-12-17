@@ -97,24 +97,6 @@ class Api:
                     for line in json_data[key]:
                         self.data.append(line)
 
-    def clear_data(self, *required_keys, **required_values):
-        """
-            Function for remove products without required keys
-        """
-        for i, data in enumerate(self.data):
-            removed = False
-            for key in required_keys:
-                if not key in data.keys():
-                    self.data.pop(i)
-                    removed = True
-                    break
-            if not removed:
-                for key, value in required_values.items():
-                    if data[key] != value:
-                        self.data.pop(i)
-                        removed = True
-                        break
-
     def delete_files(self):
         """
             This method is called for deleting tmp files

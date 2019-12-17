@@ -108,6 +108,7 @@ def main():
 
         # Delete temporary files
         api.delete_files()
+    pbs_db.close_database()
 
 
 if __name__ == '__main__':

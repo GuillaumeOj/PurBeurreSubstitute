@@ -69,5 +69,12 @@ class Database:
             if err.errno != 1062: # Duplicates entries
                 print(err)
 
+    def close_database(self):
+        """
+            This method is called for closing the connection with the database
+        """
+        self.cursor.close()
+        self.connection.close()
+
 if __name__ == '__main__':
     print('Please don\'t load me alone...')

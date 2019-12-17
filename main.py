@@ -140,7 +140,7 @@ def main():
                  INNER JOIN Categories ON Products_categories.category_id = Categories.id
                  WHERE Categories.name = %s
                  ORDER BY RAND() LIMIT 15""")
-        result = pbs_db.select_in_database(query, (str(categories.choosen), ))
+        result = pbs_db.select_in_database(query, (categories.choosen, ))
         choices = list()
         for (name,) in result:
             choices.append(name)
@@ -149,6 +149,23 @@ def main():
         products = SelectionMenu(*choices)
         products.display_choices('Choisissez un produit')
         products.user_input('Sélectionnez un produit (numéro)')
+
+        # Select the similar products in the database
+        query = ("""SELECT Products.*,
+                           Categories.name AS categories_name,
+                           Brands.name AS brands_name,
+                           Stores.name AS stores_name
+                 FROM Products
+                 INNER JOIN Products_categories ON Products_categories.product_id = Products.id
+                    INNER JOIN Categories ON Products_categories.category_id = Categories.id
+                 INNER JOIN Products_stores ON Products_stores.product_id = Products.id
+                    INNER JOIN Stores ON Products_stores.store_id = Stores.id
+                 INNER JOIN Products_brands ON Products_brands.product_id = Products.id
+                    INNER JOIN Brands ON Products_brands.brand_id = Brands.id
+                 WHERE Categories.name = %s AND Products.name != %s""")
+        result = pbs_db.select_in_database(query, (categories.choosen, products.choosen))
+
+        print(type(result))
         break
     pbs_db.close_database()
 

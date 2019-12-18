@@ -39,7 +39,7 @@ def main():
         # Get the user answer for the choosen category
         categories = SelectionMenu(*choices)
         categories.display_choices('Choisissez une catégorie')
-        categories.user_input('Sélectionne un catégorie (numéro)')
+        categories.user_input('Sélectionnez une catégorie (numéro)')
 
         # Display available products in the chossen category
         query = ("""SELECT Products.name FROM Products

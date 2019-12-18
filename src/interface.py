@@ -36,18 +36,14 @@ class SelectionMenu:
         """
         title = f'-> {title} : '
         while self.user_choice == 0:
-            self.user_choice = input(title)
             try:
-                self.user_choice = int(self.user_choice)
+                self.user_choice = int(input(title))
                 assert 1 <= self.user_choice <= len(self.choices)
             except AssertionError:
                 print('Merci de donner une réponse correcte')
-                self.user_choice == 0
-                continue
+                self.user_choice = 0
             except ValueError:
                 print('Le choix doit être un nombre entier')
-                self.user_choice == 0
-                continue
 
 
 

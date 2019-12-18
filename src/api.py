@@ -43,13 +43,14 @@ class Api:
                 dir_path = path.join(self.tmp_dir, category)
                 mkdir(dir_path)
             except FileExistsError:
-                print(f'Directory "{dir_path}" already exist')
+                raise Exception(f'Le répertoire "{dir_path}" existe déjà')
 
             # Headers for the request see : https://en.wiki.openfoodfacts.org/API/Read/Search
             headers = {'User-agent': 'PurBeurreSubstitute - Mac OS X 10.13 - Version 1.0'}
 
-            # Just a little progress bar for seeing the application work
-            progress_bar = FillingCirclesBar(f'Downloading in {dir_path}: ', max=self.pages)
+            # Just a little progress bar for seeing the application working
+            progress_bar = FillingCirclesBar(f'Téléchargement en cours dans {dir_path}: ',
+                                             max=self.pages)
             for page in range(self.pages):
                 # Parameters sent with te request
                 parameters = {'json': 1,
@@ -77,7 +78,7 @@ class Api:
                     json.dump(response.json(), output_file, indent=4)
                 progress_bar.next()
             progress_bar.finish()
-        print('Downloading done!')
+        print('Téléchargement terminé !')
 
     def read_json_with_key(self, key):
         """
@@ -103,7 +104,7 @@ class Api:
         """
         rmtree(self.tmp_dir)
 
-        print('Temp data removed.')
+        print('Fichiers temporaires supprimés')
 
 
 if __name__ == '__main__':

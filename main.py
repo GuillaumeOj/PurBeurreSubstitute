@@ -7,9 +7,9 @@
         - and of course Python.
 """
 from init import init_pur_beurre
-from settings import PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD
+from settings import PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD, API_CATEGORIES
 from src.database import Database
-# from src.product import Product
+from src.product import Product
 from src.interface import SelectionMenu
 
 

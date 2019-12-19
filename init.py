@@ -3,6 +3,8 @@
         - downloading data from Open Food Facts
         - insert data in the MySQL database
 """
+from progress.bar import FillingCirclesBar
+
 from settings import API_URL_BASE, TMP_DIR, API_CATEGORIES, API_PAGE_SIZE, API_PAGES
 from src.api import Api
 from src.product import Product
@@ -11,7 +13,7 @@ def init_pur_beurre(pbs_db):
     """
         All steps for initialisation ar here
     """
-    print('::> Première exécution, de l\'application')
+    print('=> Première exécution de l\'application')
 
     # Create a connection
     # Initialize the API
@@ -27,6 +29,9 @@ def init_pur_beurre(pbs_db):
         Product(**line)
 
     # Insert products in the database
+    products_count = len(Product.products)
+    progress_bar = FillingCirclesBar(f'Insertion des produits dans la base de données : ',
+                                     max=products_count)
     for product in Product.products:
 
         required_attributes = [product.categories,
@@ -106,6 +111,9 @@ def init_pur_beurre(pbs_db):
             for store in product.stores:
                 values = (product.name, store)
                 pbs_db.insert_in_database(query, values)
+
+        progress_bar.next()
+    progress_bar.finish()
 
     # Delete temporary files
     api.delete_files()

@@ -44,16 +44,16 @@ CREATE TABLE Stores (
 
 CREATE TABLE Products (
     id INT UNSIGNED AUTO_INCREMENT,
-    id_ext BIGINT UNSIGNED NOT NULL,
+    code BIGINT UNSIGNED NOT NULL,
     name VARCHAR(200) NOT NULL,
     common_name VARCHAR(200),
     quantity VARCHAR(50),
-    ingredients_list TEXT,
+    ingredients_text TEXT,
     nova_group TINYINT NOT NULL,
     nutriscore_grade CHAR(1) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id),
-    UNIQUE INDEX ind_product_name(name)
+    UNIQUE INDEX ind_code_name(code, name)
 ) ENGINE = INNODB;
 
 -- ---------------------------------------

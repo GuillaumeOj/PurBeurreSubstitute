@@ -14,7 +14,7 @@ class SelectionMenu:
         self.user_choice = 0
 
     @property
-    def choosen(self):
+    def selected(self):
         """
             This method give the choice's name choose by the user
         """

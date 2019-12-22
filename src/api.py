@@ -64,18 +64,17 @@ class Api:
                 file_path = path.join(dir_path, file_name)
 
                 with open(file_path, 'w') as output_file:
-                    # Load data
                     try:
-                        response = requests.get(self.url_base,
-                                                params=parameters,
-                                                headers=headers,
-                                                stream=True)
-                        response.raise_for_status()
+                        result = requests.get(self.url_base,
+                                              params=parameters,
+                                              headers=headers,
+                                              stream=True)
+                        result.raise_for_status()
                     except requests.HTTPError as err:
                         print(err)
 
                     # Write data in a json format
-                    json.dump(response.json(), output_file, indent=4)
+                    json.dump(result.json(), output_file, indent=4)
                 progress_bar.next()
             progress_bar.finish()
         print('Téléchargement terminé !')
@@ -84,6 +83,7 @@ class Api:
         """
             This method read json files and return only data on specific key
         """
+
         for category in self.categories:
             for page in range(self.pages):
                 # Create a path for the file

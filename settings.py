@@ -13,10 +13,16 @@ TMP_DIR = 'tmp/'
 
 # Parameters for download data
 API_PAGE_SIZE = 20
-API_PAGES = 20
+API_PAGES = 1
 API_URL_BASE = 'https://fr.openfoodfacts.org/cgi/search.pl'
 API_CATEGORIES = ['Aliments d\'origine végétale',
                   'Viandes',
                   'Boissons',
                   'Confiseries',
                   'Produits laitiers']
+API_REQUIRED_KEYS = ['product_name',
+                     'code',
+                     'categories',
+                     'nutriscore_grade',
+                     'nova_group',
+                     'url']

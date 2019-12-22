@@ -16,6 +16,7 @@ class Api:
             - download data
             - read data
     """
+
     def __init__(self, url_base, tmp_dir):
         self.url_base = url_base
         self.tmp_dir = tmp_dir
@@ -28,27 +29,29 @@ class Api:
         try:
             mkdir(self.tmp_dir)
         except FileExistsError:
-            print(f'Directory "{self.tmp_dir}" already exist')
+            print(f'Le répertoire "{self.tmp_dir}" existe déjà')
 
     def download_products(self, categories, page_size, pages):
         """
             Download products in temp json files
         """
+
         self.categories = categories
         self.page_size = page_size
         self.pages = pages
 
+        # Download each category
         for category in self.categories:
             try:
                 dir_path = path.join(self.tmp_dir, category)
                 mkdir(dir_path)
             except FileExistsError:
-                raise Exception(f'Le répertoire "{dir_path}" existe déjà')
+                print(f'Le répertoire "{dir_path}" existe déjà')
 
             # Headers for the request see : https://en.wiki.openfoodfacts.org/API/Read/Search
-            headers = {'User-agent': 'PurBeurreSubstitute - Mac OS X 10.13 - Version 1.0'}
+            headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 2.0'}
 
-            # Just a little progress bar for seeing the application working
+            # A progress bar for seeing the application working
             progress_bar = FillingCirclesBar(f'Téléchargement en cours dans {dir_path}: ',
                                              max=self.pages)
             for page in range(self.pages):

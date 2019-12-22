@@ -87,63 +87,21 @@ class App():
         # Delete temporary files
         api.delete_files()
 
-    def start_pur_beurre(self):
+    def client(self):
         """
-            This method start the application
+            This method is the client for the application
         """
-        while True:
-            # Get the user answer for the choosen category
-            categories = SelectionMenu(*API_CATEGORIES)
-            categories.display_choices('Choisissez une catégorie')
-            categories.user_input('Sélectionnez une catégorie (numéro)')
+        categories = SelectionMenu(*API_CATEGORIES)
+        categories.display_choices('Choisissez une catégorie')
+        categories.user_input('Sélectionnez une catégorie (numéro)')
 
-            # Display available products in the chossen category
-            query = ("""SELECT Products.name FROM Products
-                     INNER JOIN Products_categories ON Products_categories.product_id = Products.id
-                     INNER JOIN Categories ON Products_categories.category_id = Categories.id
-                     WHERE Categories.name = %s
-                     ORDER BY RAND() LIMIT 15""")
-            result = self.database.select_in_database(query, (categories.choosen, ))
-            choices = list()
-            for (name,) in result:
-                choices.append(name)
+        # Display available products in the chossen category
+        available_products = self.database.select_products(categories.selected)
 
-            # Get the user answer for the choosen product
-            products = SelectionMenu(*choices)
-            products.display_choices('Choisissez un produit')
-            products.user_input('Sélectionnez un produit (numéro)')
-
-            # Select the similar products in the database
-            query = ("""SELECT DISTINCT Products.*,
-                                        Categories.name,
-                                        Brands.name,
-                                        Stores.name
-                     FROM Products
-                     INNER JOIN Products_categories ON Products_categories.product_id = Products.id
-                        INNER JOIN Categories ON Products_categories.category_id = Categories.id
-                     INNER JOIN Products_stores ON Products_stores.product_id = Products.id
-                        INNER JOIN Stores ON Products_stores.store_id = Stores.id
-                     INNER JOIN Products_brands ON Products_brands.product_id = Products.id
-                        INNER JOIN Brands ON Products_brands.brand_id = Brands.id
-                     WHERE Categories.name = %s AND Products.name != %s""")
-            result = self.database.select_in_database(query, (categories.choosen, products.choosen))
-
-            # for product_data in result.fetchall():
-            #     kwargs = {'code': product_data[1],
-            #               'product_name': product_data[2],
-            #               'generic_name_fr': product_data[3],
-            #               'quantity': product_data[4],
-            #               'ingredients_text': product_data[5],
-            #               'nova_group': product_data[6],
-            #               'nutriscore_grade': product_data[7],
-            #               'url': product_data[8],
-            #               'categories': product_data[9],
-            #               'brands': product_data[10],
-            #               'stores': product_data[11]}
-            print(result.fetchall())
-                # Product(**kwargs)
-        self.database.close_database()
-
+        # Get the user answer for the choosen product
+        products = SelectionMenu(*available_products)
+        products.display_choices('Choisissez un produit')
+        products.user_input('Sélectionnez un produit (numéro)')
 
 if __name__ == '__main__':
 
@@ -152,3 +110,6 @@ if __name__ == '__main__':
     # Check if database is not empty
     if pur_beurre.check_database is None:
         pur_beurre.first_start()
+
+    while True:
+        pur_beurre.client()

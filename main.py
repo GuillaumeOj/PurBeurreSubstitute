@@ -80,7 +80,7 @@ class App():
         progress_bar = FillingCirclesBar(f'Insertion des produits dans la base de données : ',
                                          max=len(Product.products))
         for product in Product.products:
-            product.insert_product(self.database)
+            self.database.insert_product(product)
             progress_bar.next()
         progress_bar.finish()
 

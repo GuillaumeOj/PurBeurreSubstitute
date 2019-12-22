@@ -86,5 +86,96 @@ class Database:
         self.cursor.close()
         self.connection.close()
 
+    def insert_product(self, product):
+        """
+            Insert a product in the database
+        """
+
+        # First insert categories
+        query = ('INSERT INTO Categories'
+                 '(name)'
+                 'VALUES (%s)')
+        for category in product.categories:
+            values = (category,)
+            self.insert_in_database(query, values)
+
+        # Second insert brands
+        query = ('INSERT INTO Brands'
+                 '(name)'
+                 'VALUES (%s)')
+        for brand in product.brands:
+            values = (brand,)
+            self.insert_in_database(query, values)
+
+        # Third insert stores
+        query = ('INSERT INTO Stores'
+                 '(name)'
+                 'VALUES (%s)')
+        for store in product.stores:
+            values = (store,)
+            self.insert_in_database(query, values)
+
+        # Then insert the product
+        query = ('INSERT INTO Products'
+                 '(code, name, common_name, quantity, ingredients_text, nova_group,'
+                 'nutriscore_grade, url)'
+                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)')
+        values = (product.code,
+                  product.name,
+                  product.common_name,
+                  product.quantity,
+                  product.ingredients_text,
+                  product.nova_group,
+                  product.nutriscore_grade,
+                  product.url)
+        self.insert_in_database(query, values)
+
+        # Insert products categories
+        query = ('INSERT INTO Products_categories'
+                 '(product_id, category_id)'
+                 'VALUES'
+                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
+                 '(SELECT id FROM Categories WHERE name=%s))')
+        for category in product.categories:
+            values = (product.name, product.code, category)
+            self.insert_in_database(query, values)
+
+        # Insert products brands
+        query = ('INSERT INTO Products_brands'
+                 '(product_id, brand_id)'
+                 'VALUES'
+                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
+                 '(SELECT id FROM Brands WHERE name=%s))')
+        for brand in product.brands:
+            values = (product.name, product.code, brand)
+            self.insert_in_database(query, values)
+
+        # Insert products stores
+        query = ('INSERT INTO Products_stores'
+                 '(product_id, store_id)'
+                 'VALUES'
+                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
+                 '(SELECT id FROM Stores WHERE name=%s))')
+        for store in product.stores:
+            values = (product.name, product.code, store)
+            self.insert_in_database(query, values)
+
+    def select_products(self, selected_category):
+        """
+            Method for selecting products based on a specific category
+        """
+        query = ("""SELECT Products.name FROM Products
+                 INNER JOIN Products_categories ON Products_categories.product_id = Products.id
+                 INNER JOIN Categories ON Products_categories.category_id = Categories.id
+                 WHERE Categories.name = %s
+                 ORDER BY RAND() LIMIT 15""")
+        result = self.select_in_database(query, (selected_category, ))
+        available = list()
+        for (name,) in result:
+            available.append(name)
+
+        return available
+
+
 if __name__ == '__main__':
     print('Please don\'t load me alone...')

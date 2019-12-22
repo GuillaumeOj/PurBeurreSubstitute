@@ -7,60 +7,134 @@ class Product: # pylint: disable=too-many-instance-attributes
     """
         This class allow to create a structred object with many arguments
     """
+
     products = list()
+
     def __init__(self, **kwargs):
+
         self.categories = None
         self.brands = None
         self.stores = None
-        self.id_ext = None
-        self.name = None
-        self.common_name = None
-        self.quantity = None
-        self.ingredients = None
-        self.nova = None
-        self.nutriscore = None
-        self.url = None
 
-        if 'categories' in kwargs:
-            self.categories = self.string_to_list(kwargs['categories'])
-        if 'brands' in kwargs:
-            self.brands = self.string_to_list(kwargs['brands'])
-        if 'stores' in kwargs:
-            self.stores = self.string_to_list(kwargs['stores'])
-        if 'code' in kwargs:
-            self.id_ext = int(kwargs['code'])
-        if 'product_name' in kwargs:
-            self.name = kwargs['product_name'][:200]
+        self.code = int(kwargs['code'])
+        self.name = kwargs['product_name'][:200]
+        self.nova_group = int(kwargs['nova_group'])
+        self.nutriscore_grade = kwargs['nutriscore_grade'][:1]
+        self.url = kwargs['url'][:250]
+
+        self.common_name = str()
+        self.quantity = str()
+        self.ingredients_text = str()
+
         if 'generic_name_fr' in kwargs:
             self.common_name = kwargs['generic_name_fr'][:200]
         if 'quantity' in kwargs:
             self.quantity = kwargs['quantity'][:50]
         if 'ingredients_text' in kwargs:
-            self.ingredients = kwargs['ingredients_text']
-        if 'nutriscore_grade' in kwargs:
-            self.nutriscore = kwargs['nutriscore_grade'][:1]
-        if 'nova_group' in kwargs:
-            self.nova = int(kwargs['nova_group'])
-        if 'url' in kwargs:
-            self.url = kwargs['url'][:250]
+            self.ingredients_text = kwargs['ingredients_text']
 
         Product.products.append(self)
 
-    @staticmethod
-    def string_to_list(string, separator=','):
+    @property
+    def count(self):
         """
-            This method transform an attribute from a string to a list
+            Give the number of products
         """
-        # Transform the string to a list of attributes
-        list_of_attributes = string.split(separator)
-        for i, attribute in enumerate(list_of_attributes):
-            attribute = attribute.strip()
-            if attribute:
-                list_of_attributes[i] = attribute
-            else:
-                list_of_attributes.pop(i)
+        print(len(Product.products))
+        return len(Product.products)
 
-        return list_of_attributes
+    def add_categories(self, categories):
+        """
+            Associate multiple categories to this product
+        """
+        self.categories = categories
+
+    def add_stores(self, stores):
+        """
+            Associate multiple stores to this product
+        """
+        self.stores = stores
+
+    def add_brands(self, brands):
+        """
+            Associate multiple brands to this product
+        """
+        self.brands = brands
+
+    def insert_product(self, database):
+        """
+            Insert the product in the database
+        """
+
+        # First insert categories
+        query = ('INSERT INTO Categories'
+                 '(name)'
+                 'VALUES (%s)')
+        for category in self.categories:
+            values = (category,)
+            database.insert_in_database(query, values)
+
+        # Second insert brands
+        query = ('INSERT INTO Brands'
+                 '(name)'
+                 'VALUES (%s)')
+        for brand in self.brands:
+            values = (brand,)
+            database.insert_in_database(query, values)
+
+        # Third insert stores
+        query = ('INSERT INTO Stores'
+                 '(name)'
+                 'VALUES (%s)')
+        for store in self.stores:
+            values = (store,)
+            database.insert_in_database(query, values)
+
+        # Then insert the product
+        query = ('INSERT INTO Products'
+                 '(code, name, common_name, quantity, ingredients_text, nova_group,'
+                 'nutriscore_grade, url)'
+                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)')
+        values = (self.code,
+                  self.name,
+                  self.common_name,
+                  self.quantity,
+                  self.ingredients_text,
+                  self.nova_group,
+                  self.nutriscore_grade,
+                  self.url)
+        database.insert_in_database(query, values)
+
+        # Insert products categories
+        query = ('INSERT INTO Products_categories'
+                 '(product_id, category_id)'
+                 'VALUES'
+                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
+                 '(SELECT id FROM Categories WHERE name=%s))')
+        for category in self.categories:
+            values = (self.name, self.code, category)
+            database.insert_in_database(query, values)
+
+        # Insert products brands
+        query = ('INSERT INTO Products_brands'
+                 '(product_id, brand_id)'
+                 'VALUES'
+                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
+                 '(SELECT id FROM Brands WHERE name=%s))')
+        for brand in self.brands:
+            values = (self.name, self.code, brand)
+            database.insert_in_database(query, values)
+
+        # Insert products stores
+        query = ('INSERT INTO Products_stores'
+                 '(product_id, store_id)'
+                 'VALUES'
+                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
+                 '(SELECT id FROM Stores WHERE name=%s))')
+        for store in self.stores:
+            values = (self.name, self.code, store)
+            database.insert_in_database(query, values)
+
 
 
 if __name__ == '__main__':

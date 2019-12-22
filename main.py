@@ -36,7 +36,7 @@ class App():
         """
         return self.database.check_database()
 
-    def init_pur_beurre(self):
+    def first_start(self):
         """
             This method initialise the database if its empty
         """
@@ -151,4 +151,4 @@ if __name__ == '__main__':
 
     # Check if database is not empty
     if pur_beurre.check_database is None:
-        pur_beurre.init_pur_beurre()
+        pur_beurre.first_start()

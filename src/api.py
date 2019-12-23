@@ -105,13 +105,19 @@ class Api:
         """
             This method drop data with missing keys
         """
+        index_list = list()
+        for i, dictionary in enumerate(self.data):
+            try:
+                for key in required_keys:
+                    if not key in dictionary:
+                        raise KeyError
+            except KeyError:
+                index_list.append(i)
 
-        for i, line in enumerate(self.data):
-            for key in required_keys:
-                if not key in line:
-                    self.data.pop(i)
-                    continue
+        index_list.reverse()
 
+        for index in index_list:
+            self.data.pop(index)
 
     def delete_files(self):
         """

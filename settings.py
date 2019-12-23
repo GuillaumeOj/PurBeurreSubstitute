@@ -12,8 +12,8 @@ PBS_PASSWORD = 'pbs'
 TMP_DIR = 'tmp/'
 
 # Parameters for download data
-API_PAGE_SIZE = 20
-API_PAGES = 1
+API_PAGE_SIZE = 100
+API_PAGES = 10
 API_URL_BASE = 'https://fr.openfoodfacts.org/cgi/search.pl'
 API_CATEGORIES = ['Aliments d\'origine végétale',
                   'Viandes',

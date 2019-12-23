@@ -170,11 +170,11 @@ class Database:
                  WHERE Categories.name = %s
                  ORDER BY RAND() LIMIT 15""")
         result = self.select_in_database(query, (selected_category, ))
-        available = list()
+        available_products = list()
         for (name,) in result:
-            available.append(name)
+            available_products.append(name)
 
-        return available
+        return available_products
 
 
 if __name__ == '__main__':

@@ -91,7 +91,7 @@ class App():
         """
             This method is the client for the application
         """
-        categories = SelectionMenu(*API_CATEGORIES)
+        categories = SelectionMenu(API_CATEGORIES)
         categories.display_choices('Choisissez une catégorie')
         categories.user_input('Sélectionnez une catégorie (numéro)')
 
@@ -99,7 +99,7 @@ class App():
         available_products = self.database.select_products(categories.selected)
 
         # Get the user answer for the choosen product
-        products = SelectionMenu(*available_products)
+        products = SelectionMenu(available_products)
         products.display_choices('Choisissez un produit')
         products.user_input('Sélectionnez un produit (numéro)')
 
@@ -110,11 +110,15 @@ class App():
                                                                  SUBSTITUTE_QUANTITY)
 
         if available_substitutes:
-            substitutes = SelectionMenu(*available_substitutes)
+            substitutes = SelectionMenu(available_substitutes)
             substitutes.display_choices('Choisissez un substitut')
             substitutes.user_input('Sélectionner un substitut (numéro)')
         else:
             print('Nous n\'avons pas de substitut à vous proposer.')
+
+        # Display the selectd substitute
+        if substitutes:
+            product = self.database.select_product(substitutes.selected)
 
 if __name__ == '__main__':
 

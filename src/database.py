@@ -166,15 +166,15 @@ class Database:
         """
             Method for selecting products based on a specific category
         """
-        query = ("""SELECT Products.name FROM Products
+        query = ("""SELECT Products.name, Products.code FROM Products
                  INNER JOIN Products_categories ON Products_categories.product_id = Products.id
                  INNER JOIN Categories ON Products_categories.category_id = Categories.id
                  WHERE Categories.name = %s
                  ORDER BY RAND() LIMIT 15""")
         result = self.select_in_database(query, (selected_category, ))
         available_products = list()
-        for (name,) in result:
-            available_products.append(name)
+        for (name, code) in result:
+            available_products.append({'name': name, 'code': code})
 
         return available_products
 
@@ -192,6 +192,7 @@ class Database:
         # Select all products from "selected_category"
         query = ("""SELECT Products_categories.product_id,
                            Products_categories.category_id,
+                           Products.code,
                            Products.name,
                            Products.nutriscore_grade,
                            Products.nova_group
@@ -202,7 +203,7 @@ class Database:
                  INNER JOIN Products ON Products_categories.product_id = Products.id
                  INNER JOIN Categories ON Products_categories.category_id = Categories.id
                  WHERE Categories.name = %s AND Products.name != %s)""")
-        query_values = (selected_category, selected_product)
+        query_values = (selected_category, selected_product['name'])
 
         subs = self.select_in_database(query, query_values)
 
@@ -213,9 +214,10 @@ class Database:
             subs_categories[product[0]].append(product[1])
 
             product = {'product_id': product[0],
-                       'name': product[2],
-                       'nutriscore_grade': product[3],
-                       'nova_group': product[4]}
+                       'code': product[2],
+                       'name': product[3],
+                       'nutriscore_grade': product[4],
+                       'nova_group': product[5]}
             if product not in available_subs:
                 available_subs.append(product)
 
@@ -227,8 +229,8 @@ class Database:
                            Products.nova_group
                  FROM Products_categories
                  INNER JOIN Products ON Products.id = Products_categories.product_id
-                 WHERE name = %s""")
-        query_values = (selected_product, )
+                 WHERE name = %s AND code = %s""")
+        query_values = (selected_product['name'], selected_product['code'])
 
         orig_categories = self.select_in_database(query, query_values)
         orig_categories = [product[1] for product in orig_categories]
@@ -274,9 +276,59 @@ class Database:
                                                  product['nova_group'],
                                                  product['categories_count']))
         # The method return only
-        available_subs = [product['name'] for product in available_subs][:substitutes_quantity]
+        available_subs = [{'name': product['name'], 'code': product['code']}\
+                          for product in available_subs][:substitutes_quantity]
 
         return available_subs
+
+    def select_product(self, selected_product):
+        """
+            Select all informations for a specific poduct based on his 'name'
+        """
+        # Select all informations in the products' table
+        query = ("SELECT * FROM Products WHERE name = %s and code = %s")
+        query_values = (selected_product['name'], selected_product['code'])
+
+        product = self.select_in_database(query, query_values).fetchone()
+
+        product = {'code': product[1],
+                   'name': product[2],
+                   'common_name': product[3],
+                   'quantity': product[4],
+                   'ingredients_text': product[5],
+                   'nova_group': product[6],
+                   'nutriscore_grade': product[7],
+                   'url': product[8]}
+
+        # Select all categories for the product
+        query = ("""SELECT Categories.name FROM Categories
+                 INNER JOIN Products_categories ON Categories.id = Products_categories.category_id
+                 INNER JOIN Products ON Products_categories.product_id = Products.id
+                 WHERE Products.name = %s and Products.code = %s""")
+        query_values = (selected_product['name'], selected_product['code'])
+
+        categories = [category for (category, ) in self.select_in_database(query, query_values)]
+
+        # Select all stores for the product
+        query = ("""SELECT Stores.name FROM Stores
+                 INNER JOIN Products_stores ON Stores.id = Products_stores.store_id
+                 INNER JOIN Products ON Products_stores.product_id = Products.id
+                 WHERE Products.name = %s and Products.code = %s""")
+        query_values = (selected_product['name'], selected_product['code'])
+
+        stores = [store for (store, ) in self.select_in_database(query, query_values)]
+
+        # Select all brands for the product
+        query = ("""SELECT Brands.name FROM Brands
+                 INNER JOIN Products_brands ON Brands.id = Products_brands.brand_id
+                 INNER JOIN Products ON Products_brands.product_id = Products.id
+                 WHERE Products.name = %s and Products.code = %s""")
+        query_values = (selected_product['name'], selected_product['code'])
+
+        brands = [brand for (brand, ) in self.select_in_database(query, query_values)]
+
+        return {'product': product, 'categories': categories, 'stores': stores, 'brands': brands}
+
 
 
 if __name__ == '__main__':

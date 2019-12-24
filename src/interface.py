@@ -9,7 +9,7 @@ class SelectionMenu:
             - Possible choices
             - Manage user answer
     """
-    def __init__(self, *choices):
+    def __init__(self, choices):
         self.choices = choices
         self.user_choice = 0
 
@@ -27,7 +27,10 @@ class SelectionMenu:
         title = f'\n=== {title} ==='
         print(title)
         for i, choice in enumerate(self.choices):
-            line = f'{i + 1}. {choice}'
+            if isinstance(choice, str):
+                line = f'{i + 1}. {choice}'
+            if isinstance(choice, dict):
+                line = f"{i + 1}. {choice['name']} | {choice['code']}"
             print(line)
 
     def user_input(self, title):

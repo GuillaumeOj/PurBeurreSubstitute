@@ -24,7 +24,7 @@ class SelectionMenu:
         """
             This method display the choices on the screen
         """
-        title = f'=== {title} ==='
+        title = f'\n=== {title} ==='
         print(title)
         for i, choice in enumerate(self.choices):
             line = f'{i + 1}. {choice}'

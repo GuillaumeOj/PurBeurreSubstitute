@@ -26,3 +26,5 @@ API_REQUIRED_KEYS = ['product_name',
                      'nutriscore_grade',
                      'nova_group',
                      'url']
+
+SIMILAR_CATEGORIES = 6

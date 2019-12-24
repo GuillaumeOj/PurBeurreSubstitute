@@ -1,6 +1,8 @@
 """
     This module manage all operations with the database
 """
+from collections import defaultdict
+
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -175,6 +177,101 @@ class Database:
             available_products.append(name)
 
         return available_products
+
+    def select_substitutes(self, selected_category, selected_product, similar_categories):
+        """
+            Method for selecting all available subsitutes for a specific product
+        """
+        available_subs = list()
+
+        # Select all products from "selected_category"
+        query = ("""SELECT Products_categories.product_id,
+                           Products_categories.category_id,
+                           Products.name,
+                           Products.nutriscore_grade,
+                           Products.nova_group
+                 FROM Products_categories
+                 INNER JOIN Products ON Products.id = Products_categories.product_id
+                 WHERE Products_categories.product_id IN 
+                 (SELECT product_id FROM Products_categories
+                 INNER JOIN Products ON Products_categories.product_id = Products.id
+                 INNER JOIN Categories ON Products_categories.category_id = Categories.id
+                 WHERE Categories.name = %s AND Products.name != %s)""")
+        query_values = (selected_category, selected_product)
+
+        subs = self.select_in_database(query, query_values)
+
+        # Create a dict of products with a list of categories for each product
+        # And the list of available products as substitutes
+        subs_categories = defaultdict(list)
+        for product in subs:
+            subs_categories[product[0]].append(product[1])
+
+            product = {'product_id': product[0],
+                       'name': product[2],
+                       'nutriscore_grade': product[3],
+                       'nova_group': product[4]}
+            if product not in available_subs:
+                available_subs.append(product)
+
+        # Select categories for "selected_product"
+        query = ("""SELECT Products_categories.product_id,
+                           Products_categories.category_id,
+                           Products.name,
+                           Products.nutriscore_grade,
+                           Products.nova_group
+                 FROM Products_categories
+                 INNER JOIN Products ON Products.id = Products_categories.product_id
+                 WHERE name = %s""")
+        query_values = (selected_product, )
+
+        orig_categories = self.select_in_database(query, query_values)
+        orig_categories = [product[1] for product in orig_categories]
+
+        orig_product = self.select_in_database(query, query_values).fetchone()
+        orig_product = {'product_id': orig_product[0],
+                        'name': orig_product[2],
+                        'nutriscore_grade': orig_product[3],
+                        'nova_group': orig_product[4]}
+
+        # Count similar categories betwen the selected product and each substitutes products
+        for product_id, product_categories in subs_categories.items():
+            subs_categories[product_id] = set(orig_categories).intersection(product_categories)
+
+            # We keep only the count of similar categories
+            subs_categories[product_id] = len(subs_categories[product_id])
+
+        # Add categories count to each product
+        for i, product in enumerate(available_subs):
+            product['categories_count'] = subs_categories[product['product_id']]
+            available_subs[i] = product
+
+        # Keep only substitutes if the count of common categories
+        # is greater or equal to 'similar_categories'
+        available_subs = [product\
+                          for product in available_subs\
+                          if product['categories_count'] >= similar_categories]
+
+        # Keep only substitutes if the 'nutriscore_grade'
+        # is less than original product's 'nutriscore_grade'
+        available_subs = [product\
+                          for product in available_subs\
+                          if product['nutriscore_grade'] <= orig_product['nutriscore_grade']]
+
+        # Keep only substitutes if the 'nova_group'
+        # is less than original product's 'nova_group'
+        available_subs = [product\
+                          for product in available_subs\
+                          if product['nova_group'] <= orig_product['nova_group']]
+
+        # Sort by better 'nutriscore_grade', 'nova_group' and greater 'similar_categories'
+        sort_key = lambda product: (product['nutriscore_grade'],
+                                    product['nova_group'],
+                                    product['categories_count'])
+        available_subs.sort(key=sort_key)
+        available_subs = [product['name'] for product in available_subs][:10]
+
+        return available_subs
 
 
 if __name__ == '__main__':

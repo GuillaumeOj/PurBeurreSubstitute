@@ -103,6 +103,18 @@ class App():
         products.display_choices('Choisissez un produit')
         products.user_input('Sélectionnez un produit (numéro)')
 
+        # Select in the database the substitutes to the selectd product
+        available_substitutes = self.database.select_substitutes(categories.selected,
+                                                                 products.selected,
+                                                                 SIMILAR_CATEGORIES)
+
+        if available_substitutes:
+            substitutes = SelectionMenu(*available_substitutes)
+            substitutes.display_choices('Choisissez un substitut')
+            substitutes.user_input('Sélectionner un substitut (numéro)')
+        else:
+            print('Nous n\'avons pas de substitut à vous proposer.')
+
 if __name__ == '__main__':
 
     pur_beurre = App() # pylint: disable=invalid-name

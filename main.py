@@ -106,7 +106,8 @@ class App():
         # Select in the database the substitutes to the selectd product
         available_substitutes = self.database.select_substitutes(categories.selected,
                                                                  products.selected,
-                                                                 SIMILAR_CATEGORIES)
+                                                                 SIMILAR_CATEGORIES,
+                                                                 SUBSTITUTE_QUANTITY)
 
         if available_substitutes:
             substitutes = SelectionMenu(*available_substitutes)

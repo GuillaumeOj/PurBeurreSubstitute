@@ -28,3 +28,4 @@ API_REQUIRED_KEYS = ['product_name',
                      'url']
 
 SIMILAR_CATEGORIES = 6
+SUBSTITUTE_QUANTITY = 10

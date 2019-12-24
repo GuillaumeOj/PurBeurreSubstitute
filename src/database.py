@@ -178,7 +178,12 @@ class Database:
 
         return available_products
 
-    def select_substitutes(self, selected_category, selected_product, similar_categories):
+    def select_substitutes(self,
+                           selected_category,
+                           selected_product,
+                           similar_categories,
+                           substitutes_quantity):
+        # pylint: disable=too-many-locals
         """
             Method for selecting all available subsitutes for a specific product
         """
@@ -265,11 +270,11 @@ class Database:
                           if product['nova_group'] <= orig_product['nova_group']]
 
         # Sort by better 'nutriscore_grade', 'nova_group' and greater 'similar_categories'
-        sort_key = lambda product: (product['nutriscore_grade'],
-                                    product['nova_group'],
-                                    product['categories_count'])
-        available_subs.sort(key=sort_key)
-        available_subs = [product['name'] for product in available_subs][:10]
+        available_subs.sort(key=lambda product: (product['nutriscore_grade'],
+                                                 product['nova_group'],
+                                                 product['categories_count']))
+        # The method return only
+        available_subs = [product['name'] for product in available_subs][:substitutes_quantity]
 
         return available_subs
 

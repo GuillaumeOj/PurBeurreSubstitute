@@ -115,10 +115,13 @@ class App():
             substitutes.user_input('Sélectionner un substitut (numéro)')
         else:
             print('Nous n\'avons pas de substitut à vous proposer.')
+            substitutes = None
 
-        # Display the selectd substitute
+        # Display the selected substitute
         if substitutes:
-            product = self.database.select_product(substitutes.selected)
+            product = Product(**self.database.select_product(substitutes.selected))
+            print(product.categories)
+            product.display()
 
 if __name__ == '__main__':
 

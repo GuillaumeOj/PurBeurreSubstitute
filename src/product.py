@@ -28,10 +28,18 @@ class Product: # pylint: disable=too-many-instance-attributes
 
         if 'generic_name_fr' in kwargs:
             self.common_name = kwargs['generic_name_fr'][:200]
+        if 'common_name' in kwargs:
+            self.common_name = kwargs['common_name'][:200]
         if 'quantity' in kwargs:
             self.quantity = kwargs['quantity'][:50]
         if 'ingredients_text' in kwargs:
             self.ingredients_text = kwargs['ingredients_text']
+        if 'categories' in kwargs:
+            self.categories = kwargs['categories']
+        if 'brands' in kwargs:
+            self.brands = kwargs['brands']
+        if 'stores' in kwargs:
+            self.stores = kwargs['stores']
 
         Product.products.append(self)
 
@@ -60,6 +68,43 @@ class Product: # pylint: disable=too-many-instance-attributes
             Associate multiple brands to this product
         """
         self.brands = brands
+
+    def display(self):
+        """
+            Display the product as a sheet
+        """
+        print('\n')
+        print('=== Fiche produit ===')
+
+        print(f'Nom commercial : {self.name}', end=' ')
+
+        if self.common_name:
+            print(f'// Nom générique : {self.common_name}')
+        else:
+            print('\n')
+
+        print(f'Catégorie·s : {", ".join(self.categories)}')
+
+        print(f'Code barre : {self.code}')
+
+        print(f'Liste des ingrédients : {self.ingredients_text}')
+
+        print(f'Quantité : {self.quantity}')
+
+        print(f'Nutriscore : {self.nutriscore_grade.upper()}', end=' ')
+        print(f'// Groupe Nova : {str(self.nova_group)}')
+
+        if self.brands:
+            print(f'Marque·s : {", ".join(self.brands)}')
+        else:
+            print('Marque·s : NC')
+
+        if self.stores:
+            print(f'Point·s de vente : {", ".join(self.stores)}')
+        else:
+            print('Point·s de vente : NC')
+
+        print(f'Url Open Food Fact : {self.url}')
 
 
 

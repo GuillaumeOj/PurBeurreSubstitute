@@ -292,7 +292,7 @@ class Database:
         product = self.select_in_database(query, query_values).fetchone()
 
         product = {'code': product[1],
-                   'name': product[2],
+                   'product_name': product[2],
                    'common_name': product[3],
                    'quantity': product[4],
                    'ingredients_text': product[5],
@@ -327,7 +327,11 @@ class Database:
 
         brands = [brand for (brand, ) in self.select_in_database(query, query_values)]
 
-        return {'product': product, 'categories': categories, 'stores': stores, 'brands': brands}
+        product['categories'] = categories
+        product['brands'] = brands
+        product['stores'] = stores
+
+        return product
 
 
 

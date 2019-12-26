@@ -24,7 +24,7 @@ class Database:
         self.connection = False
         self.cursor = False
 
-    def connect_databse(self):
+    def connect_database(self):
         """
             This method connect the application to the database
         """

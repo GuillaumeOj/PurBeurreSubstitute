@@ -25,7 +25,7 @@ class App():
 
         # Connect to the database
         self.database = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
-        self.database.connect_databse()
+        self.database.connect_database()
 
         # Check if database is not empty
         if self.check_database is None:
@@ -35,6 +35,8 @@ class App():
         while continue_app:
             if self.client() == 'Non':
                 continue_app = False
+
+        self.database.close_database()
 
     @property
     def check_database(self):

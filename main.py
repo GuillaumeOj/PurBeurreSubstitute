@@ -28,7 +28,7 @@ class App():
         self.database.connect_database()
 
         # Check if database is not empty
-        if self.check_database is None:
+        if self.database.check_database() is None:
             self.first_start()
 
         continue_app = True
@@ -37,13 +37,6 @@ class App():
                 continue_app = False
 
         self.database.close_database()
-
-    @property
-    def check_database(self):
-        """
-            Property for checking if the database is empty
-        """
-        return self.database.check_database()
 
     def first_start(self):
         """

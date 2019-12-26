@@ -58,6 +58,15 @@ class Database:
 
         return self.cursor.fetchone()
 
+    def check_users(self):
+        """
+            This method check if there is users in the database
+        """
+        query = "SELECT * FROM Users LIMIT 1"
+        self.cursor.execute(query)
+
+        return self.cursor.fetchone()
+
     def insert_in_database(self, query, values):
         """
             This method insert in the database with "query" as argument and an optionnal crieterion

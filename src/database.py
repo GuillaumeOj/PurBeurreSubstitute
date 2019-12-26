@@ -333,6 +333,19 @@ class Database:
 
         return product
 
+    def save_product(self, product):
+        """
+            This method save a product as a favorites in the database
+        """
+        query = ("""INSERT INTO Saved_products (user_id, product_id)
+                 VALUES (1,
+                 (SELECT Products.id FROM Products
+                 WHERE Products.name = %s AND Products.code = %s))""")
+        query_values = (product.name, product.code)
+
+        self.insert_in_database(query, query_values)
+
+        print('Produit enregistré')
 
 
 if __name__ == '__main__':

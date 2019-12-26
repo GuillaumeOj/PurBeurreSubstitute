@@ -120,8 +120,20 @@ class App():
         # Display the selected substitute
         if substitutes:
             product = Product(**self.database.select_product(substitutes.selected))
-            print(product.categories)
             product.display()
+        else:
+            product = None
+
+        # Ask the user if she·he wants to save the product
+        if product:
+            register = SelectionMenu(['Oui', 'Non'])
+            register.display_choices('Souhaitez-vous sauvegarder le produit ?')
+            register.user_input('Sélectionnez une réponse (numéro)')
+        else:
+            register = None
+
+        if register:
+            self.database.save_product(product)
 
 if __name__ == '__main__':
 

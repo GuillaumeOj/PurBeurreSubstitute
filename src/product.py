@@ -12,30 +12,26 @@ class Product: # pylint: disable=too-many-instance-attributes
 
     def __init__(self, **kwargs):
 
-        self.categories = None
-        self.brands = None
-        self.stores = None
-
-        self.code = int(kwargs['code'])
-        self.name = kwargs['product_name'][:200]
-        self.nova_group = int(kwargs['nova_group'])
-        self.nutriscore_grade = kwargs['nutriscore_grade'][:1]
-        self.url = kwargs['url'][:250]
+        self.categories = kwargs['categories']
+        self.code = kwargs['code']
+        self.name = kwargs['product_name']
+        self.nutriscore_grade = kwargs['nutriscore_grade']
+        self.url = kwargs['url']
 
         self.common_name = str()
         self.quantity = str()
         self.ingredients_text = str()
+        self.brands = list()
+        self.stores = list()
 
         if 'generic_name_fr' in kwargs:
-            self.common_name = kwargs['generic_name_fr'][:200]
+            self.common_name = kwargs['generic_name_fr']
         if 'common_name' in kwargs:
-            self.common_name = kwargs['common_name'][:200]
+            self.common_name = kwargs['common_name']
         if 'quantity' in kwargs:
-            self.quantity = kwargs['quantity'][:50]
+            self.quantity = kwargs['quantity']
         if 'ingredients_text' in kwargs:
             self.ingredients_text = kwargs['ingredients_text']
-        if 'categories' in kwargs:
-            self.categories = kwargs['categories']
         if 'brands' in kwargs:
             self.brands = kwargs['brands']
         if 'stores' in kwargs:
@@ -50,24 +46,6 @@ class Product: # pylint: disable=too-many-instance-attributes
         """
         print(len(Product.products))
         return len(Product.products)
-
-    def add_categories(self, categories):
-        """
-            Associate multiple categories to this product
-        """
-        self.categories = categories
-
-    def add_stores(self, stores):
-        """
-            Associate multiple stores to this product
-        """
-        self.stores = stores
-
-    def add_brands(self, brands):
-        """
-            Associate multiple brands to this product
-        """
-        self.brands = brands
 
     def display(self):
         """
@@ -91,8 +69,7 @@ class Product: # pylint: disable=too-many-instance-attributes
 
         print(f'Quantité : {self.quantity}')
 
-        print(f'Nutriscore : {self.nutriscore_grade.upper()}', end=' ')
-        print(f'// Groupe Nova : {str(self.nova_group)}')
+        print(f'Nutriscore : {self.nutriscore_grade.upper()}')
 
         if self.brands:
             print(f'Marque·s : {", ".join(self.brands)}')

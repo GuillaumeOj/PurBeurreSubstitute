@@ -20,12 +20,16 @@ API_CATEGORIES = ['Aliments d\'origine végétale',
                   'Boissons',
                   'Confiseries',
                   'Produits laitiers']
-API_REQUIRED_KEYS = ['product_name',
-                     'code',
-                     'categories',
-                     'nutriscore_grade',
-                     'nova_group',
-                     'url']
+API_DATA_FORMAT = [{'name': 'product_name', 'type': str, 'length': 100, 'required': True},
+                   {'name': 'generic_name_fr', 'type': str, 'length': 100, 'required': False},
+                   {'name': 'categories', 'type': list, 'length': 100, 'required': True},
+                   {'name': 'stores', 'type': list, 'length': 100, 'required': False},
+                   {'name': 'brands', 'type': list, 'length': 100, 'required': False},
+                   {'name': 'quantity', 'type': str, 'length': 50, 'required': False},
+                   {'name': 'code', 'type': int, 'required': True},
+                   {'name': 'nutriscore_grade', 'type': str, 'length': 1, 'required': True},
+                   {'name': 'url', 'type': str, 'length': 250, 'required': True},
+                   {'name': 'ingredients_text', 'type': str, 'required': False}]
 
-SIMILAR_CATEGORIES = 6
+SIMILAR_CATEGORIES = 4
 SUBSTITUTE_QUANTITY = 10

@@ -10,7 +10,7 @@ USE PBS;
 
 CREATE TABLE Categories (
     id INT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(150) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     PRIMARY KEY(id),
     UNIQUE INDEX ind_cat_name(name)
 );
@@ -21,7 +21,7 @@ CREATE TABLE Categories (
 
 CREATE TABLE Brands (
     id INT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(150) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     PRIMARY KEY(id),
     UNIQUE INDEX ind_brand_name(name)
 
@@ -33,7 +33,7 @@ CREATE TABLE Brands (
 
 CREATE TABLE Stores (
     id INT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(150) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     PRIMARY KEY(id),
     UNIQUE INDEX ind_store_name(name)
 ) ENGINE = INNODB;
@@ -45,11 +45,10 @@ CREATE TABLE Stores (
 CREATE TABLE Products (
     id INT UNSIGNED AUTO_INCREMENT,
     code BIGINT UNSIGNED NOT NULL,
-    name VARCHAR(200) NOT NULL,
-    common_name VARCHAR(200),
+    name VARCHAR(100) NOT NULL,
+    common_name VARCHAR(100),
     quantity VARCHAR(50),
     ingredients_text TEXT,
-    nova_group TINYINT NOT NULL,
     nutriscore_grade CHAR(1) NOT NULL,
     url VARCHAR(250) NOT NULL,
     PRIMARY KEY(id),

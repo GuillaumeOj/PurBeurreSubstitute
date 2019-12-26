@@ -94,70 +94,56 @@ class Database:
         """
 
         # First insert categories
-        query = ('INSERT INTO Categories'
-                 '(name)'
-                 'VALUES (%s)')
+        query = ("INSERT INTO Categories (name) VALUES (%s)")
         for category in product.categories:
             values = (category,)
             self.insert_in_database(query, values)
 
         # Second insert brands
-        query = ('INSERT INTO Brands'
-                 '(name)'
-                 'VALUES (%s)')
+        query = ("INSERT INTO Brands (name) VALUES (%s)")
         for brand in product.brands:
             values = (brand,)
             self.insert_in_database(query, values)
 
         # Third insert stores
-        query = ('INSERT INTO Stores'
-                 '(name)'
-                 'VALUES (%s)')
+        query = ("INSERT INTO Stores (name) VALUES (%s)")
         for store in product.stores:
             values = (store,)
             self.insert_in_database(query, values)
 
         # Then insert the product
-        query = ('INSERT INTO Products'
-                 '(code, name, common_name, quantity, ingredients_text, nova_group,'
-                 'nutriscore_grade, url)'
-                 'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)')
+        query = ("""INSERT INTO Products
+                 (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s)""")
         values = (product.code,
                   product.name,
                   product.common_name,
                   product.quantity,
                   product.ingredients_text,
-                  product.nova_group,
                   product.nutriscore_grade,
                   product.url)
         self.insert_in_database(query, values)
 
         # Insert products categories
-        query = ('INSERT INTO Products_categories'
-                 '(product_id, category_id)'
-                 'VALUES'
-                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
-                 '(SELECT id FROM Categories WHERE name=%s))')
+        query = ("""INSERT INTO Products_categories (product_id, category_id)
+                 VALUES ((SELECT id FROM Products WHERE name=%s AND code=%s),
+                 (SELECT id FROM Categories WHERE name=%s))""")
         for category in product.categories:
             values = (product.name, product.code, category)
             self.insert_in_database(query, values)
 
         # Insert products brands
-        query = ('INSERT INTO Products_brands'
-                 '(product_id, brand_id)'
-                 'VALUES'
-                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
-                 '(SELECT id FROM Brands WHERE name=%s))')
+        query = ("""INSERT INTO Products_brands (product_id, brand_id)
+                 VALUES ((SELECT id FROM Products WHERE name=%s AND code=%s),
+                 (SELECT id FROM Brands WHERE name=%s))""")
         for brand in product.brands:
             values = (product.name, product.code, brand)
             self.insert_in_database(query, values)
 
         # Insert products stores
-        query = ('INSERT INTO Products_stores'
-                 '(product_id, store_id)'
-                 'VALUES'
-                 '((SELECT id FROM Products WHERE name=%s AND code=%s),'
-                 '(SELECT id FROM Stores WHERE name=%s))')
+        query = ("""INSERT INTO Products_stores (product_id, store_id)
+                 VALUES ((SELECT id FROM Products WHERE name=%s AND code=%s),
+                 (SELECT id FROM Stores WHERE name=%s))""")
         for store in product.stores:
             values = (product.name, product.code, store)
             self.insert_in_database(query, values)
@@ -194,8 +180,7 @@ class Database:
                            Products_categories.category_id,
                            Products.code,
                            Products.name,
-                           Products.nutriscore_grade,
-                           Products.nova_group
+                           Products.nutriscore_grade
                  FROM Products_categories
                  INNER JOIN Products ON Products.id = Products_categories.product_id
                  WHERE Products_categories.product_id IN 
@@ -216,8 +201,7 @@ class Database:
             product = {'product_id': product[0],
                        'code': product[2],
                        'name': product[3],
-                       'nutriscore_grade': product[4],
-                       'nova_group': product[5]}
+                       'nutriscore_grade': product[4]}
             if product not in available_subs:
                 available_subs.append(product)
 
@@ -225,8 +209,7 @@ class Database:
         query = ("""SELECT Products_categories.product_id,
                            Products_categories.category_id,
                            Products.name,
-                           Products.nutriscore_grade,
-                           Products.nova_group
+                           Products.nutriscore_grade
                  FROM Products_categories
                  INNER JOIN Products ON Products.id = Products_categories.product_id
                  WHERE name = %s AND code = %s""")
@@ -238,8 +221,7 @@ class Database:
         orig_product = self.select_in_database(query, query_values).fetchone()
         orig_product = {'product_id': orig_product[0],
                         'name': orig_product[2],
-                        'nutriscore_grade': orig_product[3],
-                        'nova_group': orig_product[4]}
+                        'nutriscore_grade': orig_product[3]}
 
         # Count similar categories betwen the selected product and each substitutes products
         for product_id, product_categories in subs_categories.items():
@@ -265,15 +247,8 @@ class Database:
                           for product in available_subs\
                           if product['nutriscore_grade'] <= orig_product['nutriscore_grade']]
 
-        # Keep only substitutes if the 'nova_group'
-        # is less than original product's 'nova_group'
-        available_subs = [product\
-                          for product in available_subs\
-                          if product['nova_group'] <= orig_product['nova_group']]
-
-        # Sort by better 'nutriscore_grade', 'nova_group' and greater 'similar_categories'
+        # Sort by better 'nutriscore_grade' and greater 'similar_categories'
         available_subs.sort(key=lambda product: (product['nutriscore_grade'],
-                                                 product['nova_group'],
                                                  product['categories_count']))
         # The method return only
         available_subs = [{'name': product['name'], 'code': product['code']}\
@@ -296,9 +271,8 @@ class Database:
                    'common_name': product[3],
                    'quantity': product[4],
                    'ingredients_text': product[5],
-                   'nova_group': product[6],
-                   'nutriscore_grade': product[7],
-                   'url': product[8]}
+                   'nutriscore_grade': product[6],
+                   'url': product[7]}
 
         # Select all categories for the product
         query = ("""SELECT Categories.name FROM Categories

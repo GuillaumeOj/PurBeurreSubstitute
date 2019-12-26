@@ -49,7 +49,7 @@ class Api:
                 print(f'Le répertoire "{dir_path}" existe déjà')
 
             # Headers for the request see : https://en.wiki.openfoodfacts.org/API/Read/Search
-            headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 2.0'}
+            headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 3.0'}
 
             # A progress bar for seeing the application working
             progress_bar = FillingCirclesBar(f'Téléchargement en cours dans {dir_path}: ',
@@ -86,7 +86,6 @@ class Api:
         """
             This method read json files and return only data on specific key
         """
-
         for category in self.categories:
             for page in range(self.pages):
                 # Create a path for the file
@@ -99,25 +98,74 @@ class Api:
 
                     # Store data in list
                     for line in json_data[key]:
+                        i += 1
                         self.data.append(line)
 
-    def clear_data(self, required_keys):
+    def keep_required(self, data_required):
         """
             This method drop data with missing keys
         """
         index_list = list()
         for i, dictionary in enumerate(self.data):
             try:
-                for key in required_keys:
-                    if not key in dictionary:
+                for required in data_required:
+                    key = required['name']
+                    required = required['required']
+
+                    # Check if the data have the required keys
+                    if required and key not in dictionary:
                         raise KeyError
+                    # Check if the required data are not null
+                    if required and not dictionary[key]:
+                        raise KeyError
+
             except KeyError:
+                # Save the data's index if there is a key error
                 index_list.append(i)
 
         index_list.reverse()
 
+        # Delete all datas with a key error
         for index in index_list:
             self.data.pop(index)
+
+    def format_data(self, data_format):
+        """
+            This method format the data to the required format for the database
+        """
+        for i, dictionary in enumerate(self.data):
+            for key_format in data_format:
+                key = key_format['name']
+                if key in dictionary:
+                    data_type = key_format['type']
+                    if data_type == str:
+                        dictionary[key] = str(dictionary[key])
+                        if 'length' in key_format:
+                            length = key_format['length']
+                            dictionary[key] = dictionary[key][:length]
+                    elif data_type == int:
+                        dictionary[key] = int(dictionary[key])
+                    elif data_type == list:
+                        dictionary[key] = self.string_to_list(dictionary[key])
+
+                self.data[i] = dictionary
+
+    @staticmethod
+    def string_to_list(string, separator=','):
+        """
+            This method transform an attribute from a string to a list
+        """
+        # Transform the string to a list of attributes
+        list_of_attributes = string.split(separator)
+        for i, attribute in enumerate(list_of_attributes):
+            attribute = attribute.strip()
+            if attribute:
+                list_of_attributes[i] = attribute
+            else:
+                list_of_attributes.pop(i)
+
+        return list_of_attributes
+
 
     def delete_files(self):
         """

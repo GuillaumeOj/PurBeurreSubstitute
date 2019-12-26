@@ -11,10 +11,8 @@ from progress.bar import FillingCirclesBar
 from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.product import Product
-from src.category import Category
 from src.interface import SelectionMenu
 from src.api import Api
-from src.util import string_to_list
 
 
 class App():
@@ -28,6 +26,15 @@ class App():
         # Connect to the database
         self.database = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
         self.database.connect_databse()
+
+        # Check if database is not empty
+        if self.check_database is None:
+            self.first_start()
+
+        continue_app = True
+        while continue_app:
+            if self.client() == 'Non':
+                continue_app = False
 
     @property
     def check_database(self):
@@ -51,30 +58,12 @@ class App():
 
         # Read data downloaded and clean uncompleted products
         api.read_json_with_key('products')
-        api.clear_data(API_REQUIRED_KEYS)
+        api.keep_required(API_DATA_FORMAT)
+        api.format_data(API_DATA_FORMAT)
 
         # Define each product as an object with variables attributes
         for product_data in api.data:
-            categories = list()
-            brands = list()
-            stores = list()
-
             product = Product(**product_data)
-
-            # Transform categories, brands and stores from a string to a list
-            for data in string_to_list(product_data['categories']):
-                categories.append(Category(data).name)
-            if 'brands' in product_data:
-                for data in string_to_list(product_data['brands']):
-                    brands.append(Category(data).name)
-            if 'stores' in product_data:
-                for data in string_to_list(product_data['stores']):
-                    stores.append(Category(data).name)
-
-            # Add categories, stores and brands to the product
-            product.add_categories(categories)
-            product.add_stores(stores)
-            product.add_brands(brands)
 
         # Insert products in the database
         progress_bar = FillingCirclesBar(f'Insertion des produits dans la base de données : ',
@@ -85,7 +74,7 @@ class App():
         progress_bar.finish()
 
         # Delete temporary files
-        api.delete_files()
+        # api.delete_files()
 
     def client(self):
         """
@@ -114,6 +103,7 @@ class App():
             substitutes.display_choices('Choisissez un substitut')
             substitutes.user_input('Sélectionner un substitut (numéro)')
         else:
+            print('\n')
             print('Nous n\'avons pas de substitut à vous proposer.')
             substitutes = None
 
@@ -129,19 +119,17 @@ class App():
             register = SelectionMenu(['Oui', 'Non'])
             register.display_choices('Souhaitez-vous sauvegarder le produit ?')
             register.user_input('Sélectionnez une réponse (numéro)')
-        else:
-            register = None
 
-        if register:
-            self.database.save_product(product)
+            if register.selected == 'Oui':
+                self.database.save_product(product)
+
+        # Ask the user if he wants to continue or end the application
+        continue_app = SelectionMenu(['Oui', 'Non'])
+        continue_app.display_choices('Souhaitez-vous continuez à utiliser l\'application ?')
+        continue_app.user_input('Sélectionnez une réponse (numéro)')
+
+        return continue_app.selected
 
 if __name__ == '__main__':
 
-    pur_beurre = App() # pylint: disable=invalid-name
-
-    # Check if database is not empty
-    if pur_beurre.check_database is None:
-        pur_beurre.first_start()
-
-    while True:
-        pur_beurre.client()
+    App()

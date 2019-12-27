@@ -98,7 +98,6 @@ class Api:
 
                     # Store data in list
                     for line in json_data[key]:
-                        i += 1
                         self.data.append(line)
 
     def keep_required(self, data_required):

@@ -43,7 +43,10 @@ class App():
             This method initialise the database if its empty
         """
 
-        print('=> Première exécution de l\'application')
+        print('\n')
+        print('========== Première exécution de l\'application ===========')
+        print('\n')
+        print('==> Télechargement des données depuis Open Food Fact')
 
         # Initialize the API
         api = Api(API_URL_BASE, TMP_DIR)
@@ -60,6 +63,9 @@ class App():
         for product_data in api.data:
             product = Product(**product_data)
 
+        print('\n')
+        print('==> Téléchargement des données terminé !')
+
         # Insert products in the database
         progress_bar = FillingCirclesBar(f'Insertion des produits dans la base de données : ',
                                          max=len(Product.products))
@@ -70,6 +76,9 @@ class App():
 
         # Delete temporary files
         api.delete_files()
+
+        print('\n')
+        print('==> Fichiers temporaires supprimés')
 
     def client(self):
         """

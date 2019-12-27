@@ -52,7 +52,8 @@ class Api:
             headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 3.0'}
 
             # A progress bar for seeing the application working
-            progress_bar = FillingCirclesBar(f'Téléchargement en cours dans {dir_path}: ',
+            progress_bar = FillingCirclesBar(f'Téléchargement en cours de la catégorie\
+                                             "{category}" :',
                                              max=self.pages)
             for page in range(self.pages):
                 # Parameters sent with te request
@@ -80,7 +81,6 @@ class Api:
                     json.dump(result.json(), output_file, indent=4)
                 progress_bar.next()
             progress_bar.finish()
-        print('Téléchargement terminé !')
 
     def read_json_with_key(self, key):
         """
@@ -171,8 +171,6 @@ class Api:
             This method is called for deleting tmp files
         """
         rmtree(self.tmp_dir)
-
-        print('Fichiers temporaires supprimés')
 
 
 if __name__ == '__main__':

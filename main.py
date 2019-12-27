@@ -42,17 +42,15 @@ class App():
         """
             This method initialise the database if its empty
         """
-
-        print('\n')
         print('========== Première exécution de l\'application ===========')
-        print('\n')
-        print('==> Télechargement des données depuis Open Food Fact')
+        print('==> Téléchargement des données depuis Open Food Fact')
 
         # Initialize the API
         api = Api(API_URL_BASE, TMP_DIR)
 
         # Download data with the API
         api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
+        print('==> Téléchargement des données terminé !')
 
         # Read data downloaded and clean uncompleted products
         api.read_json_with_key('products')
@@ -62,9 +60,6 @@ class App():
         # Define each product as an object with variables attributes
         for product_data in api.data:
             product = Product(**product_data)
-
-        print('\n')
-        print('==> Téléchargement des données terminé !')
 
         # Insert products in the database
         progress_bar = FillingCirclesBar(f'Insertion des produits dans la base de données : ',
@@ -77,7 +72,6 @@ class App():
         # Delete temporary files
         api.delete_files()
 
-        print('\n')
         print('==> Fichiers temporaires supprimés')
 
     def client(self):

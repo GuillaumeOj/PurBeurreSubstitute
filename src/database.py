@@ -319,6 +319,18 @@ class Database:
         self.insert_in_database(query, query_values)
         print('==> Produit enregistré')
 
+    def select_saved_products(self):
+        """
+            Method for selecting saved products
+        """
+        query = ("SELECT Products.name, Products.code FROM Products WHERE Products.saved = 1")
+        result = self.select_in_database(query)
+        available_products = list()
+        for (name, code) in result:
+            available_products.append({'name': name, 'code': code})
+
+        return available_products
+
     def close_database(self):
         """
             This method is called for closing the connection with the database

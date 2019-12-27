@@ -33,8 +33,28 @@ class App():
 
         continue_app = True
         while continue_app:
-            if self.client() == 'Non':
+
+            app_usage = ['Substituer un aliment', 'Retrouver un aliment déjà substitué']
+            app_usage = SelectionMenu(app_usage)
+            app_usage.display_choices('Que souhaitez-vous faire')
+            app_usage.user_input('Sélectionnez une option (numéro)')
+
+            if app_usage.selected == 'Substituer un aliment':
+                self.find_substitute()
+            else:
+                self.find_saved()
+
+            # Ask the user if he wants to continue or end the application
+            continue_app = SelectionMenu(['Oui', 'Non'])
+            continue_app.display_choices('Souhaitez-vous continuez à utiliser l\'application ?')
+            continue_app.user_input('Sélectionnez une réponse (numéro)')
+
+            if continue_app.selected == 'Non':
                 continue_app = False
+            else:
+                continue_app = True
+
+
 
         self.database.close_database()
 
@@ -74,7 +94,7 @@ class App():
 
         print('==> Fichiers temporaires supprimés')
 
-    def client(self):
+    def find_substitute(self):
         """
             This method is the client for the application
         """
@@ -90,24 +110,23 @@ class App():
         products.display_choices('Choisissez un produit')
         products.user_input('Sélectionnez un produit (numéro)')
 
-        # Select in the database the substitutes to the selectd product
+        # Select in the database the substitutes to the selected product
         available_substitutes = self.database.select_substitutes(categories.selected,
                                                                  products.selected,
                                                                  SIMILAR_CATEGORIES,
                                                                  SUBSTITUTE_QUANTITY)
 
         if available_substitutes:
-            substitutes = SelectionMenu(available_substitutes)
-            substitutes.display_choices('Choisissez un substitut')
-            substitutes.user_input('Sélectionner un substitut (numéro)')
+            substitute = SelectionMenu(available_substitutes)
+            substitute.display_choices('Choisissez un substitut')
+            substitute.user_input('Sélectionner un substitut (numéro)')
         else:
-            print('\n')
             print('Nous n\'avons pas de substitut à vous proposer.')
-            substitutes = None
+            substitute = None
 
         # Display the selected substitute
-        if substitutes:
-            product = Product(**self.database.select_product(substitutes.selected))
+        if substitute:
+            product = Product(**self.database.select_product(substitute.selected))
             product.display()
         else:
             product = None
@@ -121,12 +140,24 @@ class App():
             if register.selected == 'Oui':
                 self.database.save_product(product)
 
-        # Ask the user if he wants to continue or end the application
-        continue_app = SelectionMenu(['Oui', 'Non'])
-        continue_app.display_choices('Souhaitez-vous continuez à utiliser l\'application ?')
-        continue_app.user_input('Sélectionnez une réponse (numéro)')
+    def find_saved(self):
+        """
+            This method display the products already saved by the user
+        """
+        saved_products = self.database.select_saved_products()
 
-        return continue_app.selected
+        if saved_products:
+            substitute = SelectionMenu(saved_products)
+            substitute.display_choices('Quel produit souhaitez-vous consulter ?')
+            substitute.user_input('Sélectionnez le produit (numéro)')
+        else:
+            print('Aucun substitut n\'a était sauvegardé pour l\'instant')
+            substitute = None
+
+        if substitute:
+            product = Product(**self.database.select_product(substitute.selected))
+            product.display()
+
 
 if __name__ == '__main__':
 

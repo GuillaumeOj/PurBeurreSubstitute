@@ -51,18 +51,9 @@ CREATE TABLE Products (
     ingredients_text TEXT,
     nutriscore_grade CHAR(1) NOT NULL,
     url VARCHAR(250) NOT NULL,
+    saved BOOLEAN,
     PRIMARY KEY(id),
     UNIQUE INDEX ind_code_name(code, name)
-) ENGINE = INNODB;
-
--- ---------------------------------------
--- CREATE A TABLE FOR Users
--- ---------------------------------------
-
-CREATE TABLE Users (
-    id INT UNSIGNED AUTO_INCREMENT,
-    name VARCHAR(150) NOT NULL,
-    PRIMARY KEY(id)
 ) ENGINE = INNODB;
 
 -- ---------------------------------------
@@ -116,23 +107,5 @@ CREATE TABLE Products_stores (
     CONSTRAINT fk_stores_id
         FOREIGN KEY (store_id)
         REFERENCES Stores(id)
-        ON DELETE CASCADE
-) ENGINE = INNODB;
-
--- ---------------------------------------
--- CREATE A TABLE FOR Saved_products
--- ---------------------------------------
-
-CREATE TABLE Saved_products (
-    user_id INT UNSIGNED NOT NULL,
-    product_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY(user_id, product_id),
-    CONSTRAINT fk_user_users_id
-        FOREIGN KEY (user_id)
-        REFERENCES Users(id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_product_products_id
-        FOREIGN KEY (product_id)
-        REFERENCES Products(id)
         ON DELETE CASCADE
 ) ENGINE = INNODB;

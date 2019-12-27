@@ -90,13 +90,6 @@ class Database:
 
         return self.cursor
 
-    def close_database(self):
-        """
-            This method is called for closing the connection with the database
-        """
-        self.cursor.close()
-        self.connection.close()
-
     def insert_product(self, product):
         """
             Insert a product in the database
@@ -320,15 +313,18 @@ class Database:
         """
             This method save a product as a favorites in the database
         """
-        query = ("""INSERT INTO Saved_products (user_id, product_id)
-                 VALUES (1,
-                 (SELECT Products.id FROM Products
-                 WHERE Products.name = %s AND Products.code = %s))""")
+        query = ("UPDATE Products SET saved = 1 WHERE name = %s AND code = %s")
         query_values = (product.name, product.code)
 
         self.insert_in_database(query, query_values)
+        print('==> Produit enregistré')
 
-        print('Produit enregistré')
+    def close_database(self):
+        """
+            This method is called for closing the connection with the database
+        """
+        self.cursor.close()
+        self.connection.close()
 
 
 if __name__ == '__main__':

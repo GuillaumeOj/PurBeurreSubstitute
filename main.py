@@ -31,12 +31,6 @@ class App():
         if self.database.check_database() is None:
             self.first_start()
 
-        # Ask the user name
-        if self.database.check_users() is None:
-            pass
-        else:
-            pass
-
         continue_app = True
         while continue_app:
             if self.client() == 'Non':

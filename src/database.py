@@ -95,25 +95,7 @@ class Database:
             Insert a product in the database
         """
 
-        # First insert categories
-        query = ("INSERT INTO Categories (name) VALUES (%s)")
-        for category in product.categories:
-            values = (category,)
-            self.insert_in_database(query, values)
-
-        # Second insert brands
-        query = ("INSERT INTO Brands (name) VALUES (%s)")
-        for brand in product.brands:
-            values = (brand,)
-            self.insert_in_database(query, values)
-
-        # Third insert stores
-        query = ("INSERT INTO Stores (name) VALUES (%s)")
-        for store in product.stores:
-            values = (store,)
-            self.insert_in_database(query, values)
-
-        # Then insert the product
+        # Insert the product
         query = ("""INSERT INTO Products
                  (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
                  VALUES (%s, %s, %s, %s, %s, %s, %s)""")
@@ -125,6 +107,24 @@ class Database:
                   product.nutriscore_grade,
                   product.url)
         self.insert_in_database(query, values)
+
+        # Insert categories
+        query = ("INSERT INTO Categories (name) VALUES (%s)")
+        for category in product.categories:
+            values = (category,)
+            self.insert_in_database(query, values)
+
+        # Insert brands
+        query = ("INSERT INTO Brands (name) VALUES (%s)")
+        for brand in product.brands:
+            values = (brand,)
+            self.insert_in_database(query, values)
+
+        # Insert stores
+        query = ("INSERT INTO Stores (name) VALUES (%s)")
+        for store in product.stores:
+            values = (store,)
+            self.insert_in_database(query, values)
 
         # Insert products categories
         query = ("""INSERT INTO Products_categories (product_id, category_id)

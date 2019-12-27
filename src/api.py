@@ -49,7 +49,7 @@ class Api:
                 print(f'Le répertoire "{dir_path}" existe déjà')
 
             # Headers for the request see : https://en.wiki.openfoodfacts.org/API/Read/Search
-            headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 3.0'}
+            headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 1.0'}
 
             # A progress bar for seeing the application working
             progress_bar = f'Téléchargement en cours de la catégorie "{category}" :'

@@ -30,7 +30,9 @@ class SelectionMenu:
             if isinstance(choice, str):
                 line = f'{i + 1}. {choice}'
             if isinstance(choice, dict):
-                line = f"{i + 1}. {choice['name']} | {choice['code']}"
+                line = f"{i + 1}. {choice['name']}"
+                line = f"{line} | {choice['nutriscore_grade']}"
+                line = f"{line} | {choice['code']}"
             print(line)
 
     def user_input(self, title):

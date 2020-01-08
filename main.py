@@ -54,8 +54,6 @@ class App():
             else:
                 continue_app = True
 
-
-
         self.database.close_database()
 
     def first_start(self):
@@ -103,7 +101,7 @@ class App():
         categories.user_input('Sélectionnez une catégorie (numéro)')
 
         # Display available products in the chossen category
-        available_products = self.database.select_products(categories.selected)
+        available_products = self.database.select_products(categories.selected, NUMBER_OF_PRODUCTS)
 
         # Get the user answer for the choosen product
         products = SelectionMenu(available_products)
@@ -160,5 +158,4 @@ class App():
 
 
 if __name__ == '__main__':
-
     App()

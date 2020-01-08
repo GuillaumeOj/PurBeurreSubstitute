@@ -150,7 +150,7 @@ class Database:
             values = (product.name, product.code, store)
             self.insert_in_database(query, values)
 
-    def select_products(self, selected_category):
+    def select_products(self, selected_category, number_of_products):
         """
             Method for selecting products based on a specific category
         """
@@ -158,8 +158,8 @@ class Database:
                  INNER JOIN Products_categories ON Products_categories.product_id = Products.id
                  INNER JOIN Categories ON Products_categories.category_id = Categories.id
                  WHERE Categories.name = %s
-                 ORDER BY RAND() LIMIT 15""")
-        result = self.select_in_database(query, (selected_category, ))
+                 ORDER BY RAND() LIMIT %s""")
+        result = self.select_in_database(query, (selected_category, number_of_products))
         available_products = list()
         for (name, code) in result:
             available_products.append({'name': name, 'code': code})

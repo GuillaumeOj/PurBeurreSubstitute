@@ -33,3 +33,4 @@ API_DATA_FORMAT = [{'name': 'product_name', 'type': str, 'length': 100, 'require
 
 SIMILAR_CATEGORIES = 4
 SUBSTITUTE_QUANTITY = 10
+NUMBER_OF_PRODUCTS = 10

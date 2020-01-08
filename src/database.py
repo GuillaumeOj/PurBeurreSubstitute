@@ -95,8 +95,9 @@ class Database:
 
         # Insert the product
         query = ("""INSERT INTO Products
-                 (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
-                 VALUES (%s, %s, %s, %s, %s, %s, %s)""")
+                    (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                 """)
         values = (product.code,
                   product.name,
                   product.common_name,
@@ -126,24 +127,33 @@ class Database:
 
         # Insert products categories
         query = ("""INSERT INTO Products_categories (product_id, category_id)
-                 VALUES ((SELECT id FROM Products WHERE name=%s AND code=%s),
-                 (SELECT id FROM Categories WHERE name=%s))""")
+                    VALUES (
+                        (SELECT id FROM Products WHERE name=%s AND code=%s),
+                        (SELECT id FROM Categories WHERE name=%s)
+                    )
+                 """)
         for category in product.categories:
             values = (product.name, product.code, category)
             self.insert_in_database(query, values)
 
         # Insert products brands
         query = ("""INSERT INTO Products_brands (product_id, brand_id)
-                 VALUES ((SELECT id FROM Products WHERE name=%s AND code=%s),
-                 (SELECT id FROM Brands WHERE name=%s))""")
+                    VALUES (
+                        (SELECT id FROM Products WHERE name=%s AND code=%s),
+                        (SELECT id FROM Brands WHERE name=%s)
+                    )
+                 """)
         for brand in product.brands:
             values = (product.name, product.code, brand)
             self.insert_in_database(query, values)
 
         # Insert products stores
         query = ("""INSERT INTO Products_stores (product_id, store_id)
-                 VALUES ((SELECT id FROM Products WHERE name=%s AND code=%s),
-                 (SELECT id FROM Stores WHERE name=%s))""")
+                    VALUES (
+                        (SELECT id FROM Products WHERE name=%s AND code=%s),
+                        (SELECT id FROM Stores WHERE name=%s)
+                    )
+                 """)
         for store in product.stores:
             values = (product.name, product.code, store)
             self.insert_in_database(query, values)
@@ -240,27 +250,36 @@ class Database:
 
         # Select all categories for the product
         query = ("""SELECT Categories.name FROM Categories
-                 INNER JOIN Products_categories ON Categories.id = Products_categories.category_id
-                 INNER JOIN Products ON Products_categories.product_id = Products.id
-                 WHERE Products.name = %s and Products.code = %s""")
+                    INNER JOIN Products_categories
+                        ON Categories.id = Products_categories.category_id
+                    INNER JOIN Products
+                        ON Products_categories.product_id = Products.id
+                    WHERE Products.name = %s and Products.code = %s
+                 """)
         query_values = (selected_product['name'], selected_product['code'])
 
         categories = [category for (category, ) in self.select_in_database(query, query_values)]
 
         # Select all stores for the product
         query = ("""SELECT Stores.name FROM Stores
-                 INNER JOIN Products_stores ON Stores.id = Products_stores.store_id
-                 INNER JOIN Products ON Products_stores.product_id = Products.id
-                 WHERE Products.name = %s and Products.code = %s""")
+                    INNER JOIN Products_stores
+                        ON Stores.id = Products_stores.store_id
+                    INNER JOIN Products
+                        ON Products_stores.product_id = Products.id
+                    WHERE Products.name = %s and Products.code = %s
+                 """)
         query_values = (selected_product['name'], selected_product['code'])
 
         stores = [store for (store, ) in self.select_in_database(query, query_values)]
 
         # Select all brands for the product
         query = ("""SELECT Brands.name FROM Brands
-                 INNER JOIN Products_brands ON Brands.id = Products_brands.brand_id
-                 INNER JOIN Products ON Products_brands.product_id = Products.id
-                 WHERE Products.name = %s and Products.code = %s""")
+                    INNER JOIN Products_brands
+                        ON Brands.id = Products_brands.brand_id
+                    INNER JOIN Products
+                        ON Products_brands.product_id = Products.id
+                    WHERE Products.name = %s and Products.code = %s
+                 """)
         query_values = (selected_product['name'], selected_product['code'])
 
         brands = [brand for (brand, ) in self.select_in_database(query, query_values)]

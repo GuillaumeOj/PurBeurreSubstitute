@@ -192,7 +192,7 @@ class Database:
                             INNER JOIN Products ON Products_categories.product_id = Products.id
                             WHERE Products.code = %s)
                         AND Products.code != %s
-                        AND Products.nutriscore_grade >= (
+                        AND Products.nutriscore_grade <= (
                             SELECT Products.nutriscore_grade
                             FROM Products
                             WHERE Products.code = %s)

@@ -1,8 +1,6 @@
 """
     This module manage all operations with the database
 """
-from collections import defaultdict
-
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -154,109 +152,70 @@ class Database:
         """
             Method for selecting products based on a specific category
         """
-        query = ("""SELECT Products.name, Products.code FROM Products
-                 INNER JOIN Products_categories ON Products_categories.product_id = Products.id
-                 INNER JOIN Categories ON Products_categories.category_id = Categories.id
-                 WHERE Categories.name = %s
-                 ORDER BY RAND() LIMIT %s""")
-        result = self.select_in_database(query, (selected_category, number_of_products))
-        available_products = list()
-        for (name, code) in result:
-            available_products.append({'name': name, 'code': code})
+        query = ("""SELECT
+                        Products.name,
+                        Products.code,
+                        Products.nutriscore_grade 
+                    FROM Products
+                    INNER JOIN Products_categories ON Products_categories.product_id = Products.id
+                    INNER JOIN Categories ON Products_categories.category_id = Categories.id
+                    WHERE Categories.name = %s
+                    ORDER BY RAND()
+                    LIMIT %s
+                """)
+        products = self.select_in_database(query, (selected_category, number_of_products))
+        products = [{'name': product[0],
+                     'code': product[1],
+                     'nutriscore_grade': product[2]} for product in products]
 
-        return available_products
+        return products
 
     def select_substitutes(self,
-                           selected_category,
                            selected_product,
-                           similar_categories,
-                           substitutes_quantity):
-        # pylint: disable=too-many-locals
+                           number_of_similar_categories,
+                           number_of_substitutes):
         """
             Method for selecting all available subsitutes for a specific product
         """
-        available_subs = list()
+        query = ("""SELECT
+                        Products_categories.product_id,
+                        COUNT(Products_categories.product_id) AS common_categories,
+                        Products.name,
+                        Products.code,
+                        Products.nutriscore_grade
+                    FROM Products_categories
+                    INNER JOIN Products ON Products.id = Products_categories.product_id
+                    WHERE 
+                        Products_categories.category_id IN (
+                            SELECT Products_categories.category_id
+                            FROM Products_categories
+                            INNER JOIN Products ON Products_categories.product_id = Products.id
+                            WHERE Products.code = %s)
+                        AND Products.code != %s
+                        AND Products.nutriscore_grade >= (
+                            SELECT Products.nutriscore_grade
+                            FROM Products
+                            WHERE Products.code = %s)
+                    GROUP BY Products_categories.product_id
+                    HAVING common_categories >= %s
+                    ORDER BY
+                        Products.nutriscore_grade,
+                        common_categories DESC
+                    LIMIT %s;
+                """)
+        query_values = (selected_product['code'],
+                        selected_product['code'],
+                        selected_product['code'],
+                        number_of_similar_categories,
+                        number_of_substitutes)
 
-        # Select all products from "selected_category"
-        query = ("""SELECT Products_categories.product_id,
-                           Products_categories.category_id,
-                           Products.code,
-                           Products.name,
-                           Products.nutriscore_grade
-                 FROM Products_categories
-                 INNER JOIN Products ON Products.id = Products_categories.product_id
-                 WHERE Products_categories.product_id IN 
-                 (SELECT product_id FROM Products_categories
-                 INNER JOIN Products ON Products_categories.product_id = Products.id
-                 INNER JOIN Categories ON Products_categories.category_id = Categories.id
-                 WHERE Categories.name = %s AND Products.name != %s)""")
-        query_values = (selected_category, selected_product['name'])
+        subsitutes = self.select_in_database(query, query_values)
 
-        subs = self.select_in_database(query, query_values)
+        subsitutes = [{'name': product[2],
+                       'code': product[3],
+                       'nutriscore_grade': product[4]} for product in subsitutes]
 
-        # Create a dict of products with a list of categories for each product
-        # And the list of available products as substitutes
-        subs_categories = defaultdict(list)
-        for product in subs:
-            subs_categories[product[0]].append(product[1])
-
-            product = {'product_id': product[0],
-                       'code': product[2],
-                       'name': product[3],
-                       'nutriscore_grade': product[4]}
-            if product not in available_subs:
-                available_subs.append(product)
-
-        # Select categories for "selected_product"
-        query = ("""SELECT Products_categories.product_id,
-                           Products_categories.category_id,
-                           Products.name,
-                           Products.nutriscore_grade
-                 FROM Products_categories
-                 INNER JOIN Products ON Products.id = Products_categories.product_id
-                 WHERE name = %s AND code = %s""")
-        query_values = (selected_product['name'], selected_product['code'])
-
-        orig_categories = self.select_in_database(query, query_values)
-        orig_categories = [product[1] for product in orig_categories]
-
-        orig_product = self.select_in_database(query, query_values).fetchone()
-        orig_product = {'product_id': orig_product[0],
-                        'name': orig_product[2],
-                        'nutriscore_grade': orig_product[3]}
-
-        # Count similar categories betwen the selected product and each substitutes products
-        for product_id, product_categories in subs_categories.items():
-            subs_categories[product_id] = set(orig_categories).intersection(product_categories)
-
-            # We keep only the count of similar categories
-            subs_categories[product_id] = len(subs_categories[product_id])
-
-        # Add categories count to each product
-        for i, product in enumerate(available_subs):
-            product['categories_count'] = subs_categories[product['product_id']]
-            available_subs[i] = product
-
-        # Keep only substitutes if the count of common categories
-        # is greater or equal to 'similar_categories'
-        available_subs = [product\
-                          for product in available_subs\
-                          if product['categories_count'] >= similar_categories]
-
-        # Keep only substitutes if the 'nutriscore_grade'
-        # is less than original product's 'nutriscore_grade'
-        available_subs = [product\
-                          for product in available_subs\
-                          if product['nutriscore_grade'] <= orig_product['nutriscore_grade']]
-
-        # Sort by better 'nutriscore_grade' and greater 'similar_categories'
-        available_subs.sort(key=lambda product: (product['nutriscore_grade'],
-                                                 product['categories_count']))
-        # The method return only
-        available_subs = [{'name': product['name'], 'code': product['code']}\
-                          for product in available_subs][:substitutes_quantity]
-
-        return available_subs
+        return subsitutes
 
     def select_product(self, selected_product):
         """

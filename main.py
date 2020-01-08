@@ -109,8 +109,7 @@ class App():
         products.user_input('Sélectionnez un produit (numéro)')
 
         # Select in the database the substitutes to the selected product
-        available_substitutes = self.database.select_substitutes(categories.selected,
-                                                                 products.selected,
+        available_substitutes = self.database.select_substitutes(products.selected,
                                                                  NUMBER_OF_SIMILAR_CATEGORIES,
                                                                  NUMBER_OF_SUBSTITUTES)
 

@@ -101,7 +101,9 @@ class App():
         categories.user_input('Sélectionnez une catégorie (numéro)')
 
         # Display available products in the chossen category
-        available_products = self.database.select_products(categories.selected, NUMBER_OF_PRODUCTS)
+        available_products = self.database.select_products(categories.selected,
+                                                           NUMBER_OF_PRODUCTS,
+                                                           DISCRIMINANT_NUTRISCORE_GRADE)
 
         # Get the user answer for the choosen product
         products = SelectionMenu(available_products)

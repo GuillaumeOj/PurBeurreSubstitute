@@ -148,7 +148,7 @@ class Database:
             values = (product.name, product.code, store)
             self.insert_in_database(query, values)
 
-    def select_products(self, selected_category, number_of_products):
+    def select_products(self, selected_category, number_of_products, discriminant_criterion):
         """
             Method for selecting products based on a specific category
         """
@@ -159,11 +159,14 @@ class Database:
                     FROM Products
                     INNER JOIN Products_categories ON Products_categories.product_id = Products.id
                     INNER JOIN Categories ON Products_categories.category_id = Categories.id
-                    WHERE Categories.name = %s
+                    WHERE
+                        Categories.name = %s
+                        AND Products.nutriscore_grade > %s
                     ORDER BY RAND()
                     LIMIT %s
                 """)
-        products = self.select_in_database(query, (selected_category, number_of_products))
+        values = (selected_category, discriminant_criterion, number_of_products)
+        products = self.select_in_database(query, values)
         products = [{'name': product[0],
                      'code': product[1],
                      'nutriscore_grade': product[2]} for product in products]

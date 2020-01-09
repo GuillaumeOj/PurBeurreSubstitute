@@ -6,6 +6,8 @@
         - a database like MySQL,
         - and of course Python.
 """
+import argparse
+
 from progress.bar import FillingCirclesBar
 
 from settings import * # pylint: disable=wildcard-import
@@ -23,9 +25,22 @@ class App():
     def __init__(self):
         print('=== Bienvenue dans l\'application Pur Beurre Substitute ===')
 
+        # Add arguments
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-i',
+                            '--init',
+                            help='Initialize the Pur Beurre Substitute database',
+                            action='store_true')
+        arguments = parser.parse_args()
+
         # Connect to the database
         self.database = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
         self.database.connect_database()
+
+        # If the user use 'init' as argument, call a method in database for reading the
+        # 'init.sql' file
+        if arguments.init:
+            self.database.read_init_file(PBS_INIT_FILE)
 
         # Check if database is not empty
         if self.database.check_database() is None:

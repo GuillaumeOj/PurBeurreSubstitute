@@ -36,12 +36,30 @@ class Database:
                 database=self.db_name)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                raise Exception(f'Login informations are wrong. Please check "settings.py".\n{err}')
+                message = f'Les informations de connections sont fausses.'
+                message = f'{message} Merci de vérifier "settings.py"'
+                message = f'{message} ou de suivre les instructions de démarrage.\n{err}'
+                raise Exception(message)
             if err.errno == errorcode.ER_BAD_DB_ERROR:
-                raise Exception(f'The database does\'nt exist. Please check "settings.py".\n{err}')
+                message = f'La base de données n\'existe pas.'
+                message = f'{message} Merci de vérifier "settings.py"'
+                message = f'{message} ou de suivre les instructions de démarrage.\n{err}'
+                raise Exception(message)
             raise err
         else:
             self.cursor = self.connection.cursor(buffered=True)
+
+    def read_init_file(self, init_file):
+        """
+            This method allow to read an sql file
+        """
+        with open(init_file, 'r') as sql_file:
+            sql_commands = sql_file.read()
+            sql_commands = sql_commands.split(';')
+
+        for command in sql_commands:
+            self.cursor.execute(command)
+
 
     def check_database(self):
         """
@@ -52,7 +70,10 @@ class Database:
             query = 'SELECT * FROM Products LIMIT 1'
             self.cursor.execute(query)
         except mysql.connector.Error as err:
-            print(err)
+            if err.errno == errorcode.ER_NO_SUCH_TABLE:
+                message = f'La base de données ne contient aucune table.'
+                message = f'{message} Merci de lancer le script avec l\'option --init.\n{err}'
+                raise Exception(message)
 
         return self.cursor.fetchone()
 

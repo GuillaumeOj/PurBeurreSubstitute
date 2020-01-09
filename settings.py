@@ -7,6 +7,7 @@ PBS_DB_NAME = 'PBS'
 PBS_USER = 'pbs'
 PBS_HOST = 'localhost'
 PBS_PASSWORD = 'pbs'
+PBS_INIT_FILE = 'init.sql'
 
 # Temp dir in which we download data
 TMP_DIR = 'tmp/'

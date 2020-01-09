@@ -234,55 +234,61 @@ class Database:
         """
             Select all informations for a specific poduct based on his 'name'
         """
-        # Select all informations in the products' table
-        query = ("SELECT * FROM Products WHERE name = %s and code = %s")
-        query_values = (selected_product['name'], selected_product['code'])
-
-        product = self.select_in_database(query, query_values).fetchone()
-
-        product = {'code': product[1],
-                   'product_name': product[2],
-                   'common_name': product[3],
-                   'quantity': product[4],
-                   'ingredients_text': product[5],
-                   'nutriscore_grade': product[6],
-                   'url': product[7]}
-
-        # Select all categories for the product
-        query = ("""SELECT Categories.name FROM Categories
+        query = ("""SELECT
+                        Products.code,
+                        Products.name,
+                        Products.common_name,
+                        Products.quantity,
+                        Products.ingredients_text,
+                        Products.nutriscore_grade,
+                        Products.url,
+                        Categories.name AS categories_name,
+                        Stores.name AS stores_name,
+                        Brands.name AS brands_name
+                    FROM Products
                     INNER JOIN Products_categories
-                        ON Categories.id = Products_categories.category_id
-                    INNER JOIN Products
                         ON Products_categories.product_id = Products.id
-                    WHERE Products.name = %s and Products.code = %s
-                 """)
-        query_values = (selected_product['name'], selected_product['code'])
-
-        categories = [category for (category, ) in self.select_in_database(query, query_values)]
-
-        # Select all stores for the product
-        query = ("""SELECT Stores.name FROM Stores
+                    INNER JOIN Categories
+                        ON Categories.id = Products_categories.category_id
                     INNER JOIN Products_stores
-                        ON Stores.id = Products_stores.store_id
-                    INNER JOIN Products
                         ON Products_stores.product_id = Products.id
-                    WHERE Products.name = %s and Products.code = %s
-                 """)
-        query_values = (selected_product['name'], selected_product['code'])
-
-        stores = [store for (store, ) in self.select_in_database(query, query_values)]
-
-        # Select all brands for the product
-        query = ("""SELECT Brands.name FROM Brands
+                    INNER JOIN Stores
+                        ON Stores.id = Products_stores.store_id
                     INNER JOIN Products_brands
-                        ON Brands.id = Products_brands.brand_id
-                    INNER JOIN Products
                         ON Products_brands.product_id = Products.id
-                    WHERE Products.name = %s and Products.code = %s
+                    INNER JOIN Brands
+                        ON Brands.id = Products_brands.brand_id
+                    WHERE Products.code = %s
                  """)
-        query_values = (selected_product['name'], selected_product['code'])
+        query_values = (selected_product['code'],)
 
-        brands = [brand for (brand, ) in self.select_in_database(query, query_values)]
+        product_rows = self.select_in_database(query, query_values)
+
+        product = dict()
+        categories = list()
+        stores = list()
+        brands = list()
+
+        for row in product_rows:
+            if not product:
+                product = {'code': row[0],
+                           'product_name': row[1],
+                           'common_name': row[2],
+                           'quantity': row[3],
+                           'ingredients_text': row[4],
+                           'nutriscore_grade': row[5],
+                           'url': row[6]}
+
+            category = row[7]
+            store = row[8]
+            brand = row[9]
+
+            if category not in categories:
+                categories.append(category)
+            if store not in stores:
+                stores.append(store)
+            if brand not in brands:
+                brands.append(brand)
 
         product['categories'] = categories
         product['brands'] = brands

@@ -214,7 +214,7 @@ class Database:
                     ORDER BY
                         Products.nutriscore_grade,
                         common_categories DESC
-                    LIMIT %s;
+                    LIMIT %s
                 """)
         query_values = (selected_product['code'],
                         selected_product['code'],

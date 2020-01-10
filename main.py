@@ -127,11 +127,11 @@ class App():
                                                            DISCRIMINANT_NUTRISCORE_GRADE)
 
         # Get the user answer for the choosen product
-        to_substitute = SelectionMenu(available_products)
-        to_substitute.display_choices('Choisissez un produit')
-        to_substitute.user_input('Sélectionnez un produit (numéro)')
+        products = SelectionMenu(available_products)
+        products.display_choices('Choisissez un produit')
+        products.user_input('Sélectionnez un produit (numéro)')
 
-        to_substitute = Product(**self.database.select_product(to_substitute.selected))
+        to_substitute = Product(**self.database.select_product(products.selected))
 
         # Select in the database the substitutes to the selected product
         available_substitutes = self.database.select_substitutes(to_substitute,
@@ -139,11 +139,12 @@ class App():
                                                                  NUMBER_OF_SUBSTITUTES)
 
         if available_substitutes:
-            substituted = SelectionMenu(available_substitutes)
-            substituted.display_choices('Choisissez un substitut')
-            substituted.user_input('Sélectionner un substitut (numéro)')
+            products = SelectionMenu(available_substitutes)
+            products.display_choices('Choisissez un substitut')
+            products.user_input('Sélectionner un substitut (numéro)')
 
-            substituted = Product(**self.database.select_product(substituted.selected))
+            substituted = Product(**self.database.select_product(products.selected))
+            substituted.display()
         else:
             print('Nous n\'avons pas de substitut à vous proposer.')
             substituted = None

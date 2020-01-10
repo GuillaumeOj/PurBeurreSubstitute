@@ -209,7 +209,7 @@ class Database:
                            number_of_similar_categories,
                            number_of_substitutes):
         """
-            Method for selecting all available subsitutes for a specific product
+            Method for select all available subsitutes for the selected product
         """
         query = ("""SELECT
                         Products_categories.product_id,
@@ -267,17 +267,17 @@ class Database:
                         Stores.name AS stores_name,
                         Brands.name AS brands_name
                     FROM Products
-                    INNER JOIN Products_categories
+                    LEFT JOIN Products_categories
                         ON Products_categories.product_id = Products.id
-                    INNER JOIN Categories
+                    LEFT JOIN Categories
                         ON Categories.id = Products_categories.category_id
-                    INNER JOIN Products_stores
+                    LEFT JOIN Products_stores
                         ON Products_stores.product_id = Products.id
-                    INNER JOIN Stores
+                    LEFT JOIN Stores
                         ON Stores.id = Products_stores.store_id
-                    INNER JOIN Products_brands
+                    LEFT JOIN Products_brands
                         ON Products_brands.product_id = Products.id
-                    INNER JOIN Brands
+                    LEFT JOIN Brands
                         ON Brands.id = Products_brands.brand_id
                     WHERE Products.code = %s
                  """)
@@ -299,21 +299,20 @@ class Database:
                            'ingredients_text': row[4],
                            'nutriscore_grade': row[5],
                            'url': row[6]}
-
             category = row[7]
             store = row[8]
             brand = row[9]
 
             if category not in categories:
                 categories.append(category)
-            if store not in stores:
+            if store and store not in stores:
                 stores.append(store)
-            if brand not in brands:
+            if brand and brand not in brands:
                 brands.append(brand)
 
         product['categories'] = categories
-        product['brands'] = brands
         product['stores'] = stores
+        product['brands'] = brands
 
         return product
 

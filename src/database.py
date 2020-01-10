@@ -317,12 +317,18 @@ class Database:
 
         return product
 
-    def save_product(self, product):
+    def save_product(self, to_substitute, substituted):
         """
             This method save a product as a favorites in the database
         """
-        query = ("UPDATE Products SET saved = 1 WHERE name = %s AND code = %s")
-        query_values = (product.name, product.code)
+        query = ("""INSERT INTO Saved_products
+                    (to_substitute_id, substituted_id)
+                    VALUES (
+                        (SELECT Products.id FROM Products WHERE Products.code = %s),
+                        (SELECT Products.id FROM Products WHERE Products.code = %s)
+                    )
+                 """)
+        query_values = (to_substitute.code, substituted.code)
 
         self.insert_in_database(query, query_values)
         print('==> Produit enregistré')

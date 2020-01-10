@@ -40,7 +40,13 @@ class App():
         # If the user use 'init' as argument, call a method in database for reading the
         # 'init.sql' file
         if arguments.init:
-            self.database.read_init_file(PBS_INIT_FILE)
+            initialize = ['Oui', 'Non']
+            initialize = SelectionMenu(initialize)
+            initialize.display_choices('Êtes-vous sûr de vouloir réinitialiser la base de données')
+            initialize.user_input('Sélectionnez une réponse (numéro)')
+
+            if initialize.selected == 'Oui':
+                self.database.read_init_file(PBS_INIT_FILE)
 
         # Check if database is not empty
         if self.database.check_database() is None:

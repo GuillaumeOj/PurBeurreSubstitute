@@ -11,7 +11,6 @@ class Product: # pylint: disable=too-many-instance-attributes
     products = list()
 
     def __init__(self, **kwargs):
-
         self.categories = kwargs['categories']
         self.code = kwargs['code']
         self.name = kwargs['product_name']

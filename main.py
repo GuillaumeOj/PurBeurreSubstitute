@@ -117,48 +117,45 @@ class App():
         """
             This method is the client for the application
         """
-        categories = SelectionMenu(API_CATEGORIES)
-        categories.display_choices('Choisissez une catégorie')
-        categories.user_input('Sélectionnez une catégorie (numéro)')
+        category = SelectionMenu(API_CATEGORIES)
+        category.display_choices('Choisissez une catégorie')
+        category.user_input('Sélectionnez une catégorie (numéro)')
 
         # Display available products in the chossen category
-        available_products = self.database.select_products(categories.selected,
+        available_products = self.database.select_products(category.selected,
                                                            NUMBER_OF_PRODUCTS,
                                                            DISCRIMINANT_NUTRISCORE_GRADE)
 
         # Get the user answer for the choosen product
-        products = SelectionMenu(available_products)
-        products.display_choices('Choisissez un produit')
-        products.user_input('Sélectionnez un produit (numéro)')
+        to_substitute = SelectionMenu(available_products)
+        to_substitute.display_choices('Choisissez un produit')
+        to_substitute.user_input('Sélectionnez un produit (numéro)')
+
+        to_substitute = Product(**self.database.select_product(to_substitute.selected))
 
         # Select in the database the substitutes to the selected product
-        available_substitutes = self.database.select_substitutes(products.selected,
+        available_substitutes = self.database.select_substitutes(to_substitute,
                                                                  NUMBER_OF_SIMILAR_CATEGORIES,
                                                                  NUMBER_OF_SUBSTITUTES)
 
         if available_substitutes:
-            substitute = SelectionMenu(available_substitutes)
-            substitute.display_choices('Choisissez un substitut')
-            substitute.user_input('Sélectionner un substitut (numéro)')
+            substituted = SelectionMenu(available_substitutes)
+            substituted.display_choices('Choisissez un substitut')
+            substituted.user_input('Sélectionner un substitut (numéro)')
+
+            substituted = Product(**self.database.select_product(substituted.selected))
         else:
             print('Nous n\'avons pas de substitut à vous proposer.')
-            substitute = None
-
-        # Display the selected substitute
-        if substitute:
-            product = Product(**self.database.select_product(substitute.selected))
-            product.display()
-        else:
-            product = None
+            substituted = None
 
         # Ask the user if she·he wants to save the product
-        if product:
+        if substituted:
             register = SelectionMenu(['Oui', 'Non'])
             register.display_choices('Souhaitez-vous sauvegarder le produit ?')
             register.user_input('Sélectionnez une réponse (numéro)')
 
             if register.selected == 'Oui':
-                self.database.save_product(product)
+                self.database.save_product(to_substitute, substituted)
 
     def find_saved(self):
         """

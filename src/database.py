@@ -237,9 +237,9 @@ class Database:
                         common_categories DESC
                     LIMIT %s
                 """)
-        query_values = (selected_product['code'],
-                        selected_product['code'],
-                        selected_product['code'],
+        query_values = (selected_product.code,
+                        selected_product.code,
+                        selected_product.code,
                         number_of_similar_categories,
                         number_of_substitutes)
 

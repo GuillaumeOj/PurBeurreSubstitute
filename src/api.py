@@ -179,7 +179,6 @@ class Api:
 
         return list_of_attributes
 
-
     def delete_files(self):
         """
             This method is called for deleting tmp files

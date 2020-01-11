@@ -151,11 +151,11 @@ class App():
 
         # Ask the user if she·he wants to save the product
         if substituted:
-            register = SelectionMenu(['Oui', 'Non'])
-            register.display_choices('Souhaitez-vous sauvegarder le produit ?')
-            register.user_input('Sélectionnez une réponse (numéro)')
+            save = SelectionMenu(['Oui', 'Non'])
+            save.display_choices('Souhaitez-vous sauvegarder le produit ?')
+            save.user_input('Sélectionnez une réponse (numéro)')
 
-            if register.selected == 'Oui':
+            if save.selected == 'Oui':
                 self.database.save_product(to_substitute, substituted)
 
     def find_saved(self):

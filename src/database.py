@@ -9,6 +9,9 @@ class Database:
     """
         This class manage differents operations with the database like:
             - connection
+            - select a database
+            - read an init file
+            - check if the database is not empty
             - insert data
             - remove data
             - select data
@@ -26,8 +29,6 @@ class Database:
         """
             This method connect the application to the database
         """
-
-        # Connect to the database
         try:
             self.connection = mysql.connector.connect(
                 user=self.user,
@@ -35,13 +36,13 @@ class Database:
                 password=self.password)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                message = f'Les informations de connections sont fausses.'
+                message = f'Les informations de connexion sont eronnées.'
                 message = f'{message} Merci de vérifier "settings.py"'
-                message = f'{message} ou de suivre les instructions de démarrage.\n{err}'
+                message = f'{message} ou de suivre les instructions du Readme.md.\n{err}'
                 raise Exception(message)
             raise err
-        else:
-            self.cursor = self.connection.cursor(buffered=True)
+
+        self.cursor = self.connection.cursor(buffered=True)
 
     def select_database(self):
         """
@@ -55,23 +56,26 @@ class Database:
                 message = f'{message} Merci de vérifier "settings.py"'
                 message = f'{message} ou de suivre les instructions de démarrage.\n{err}'
                 raise Exception(message)
+            raise err
 
     def read_init_file(self, init_file):
         """
-            This method allow to read an sql file
+            This method read an sql file and execute each commands
         """
         with open(init_file, 'r') as sql_file:
+            # Read all the file as a string
             sql_commands = sql_file.read()
+
+            # Split the file in a list by using ';' as a separator for each SQL command
             sql_commands = sql_commands.split(';')
 
+        # Eaxecute each command
         for command in sql_commands:
             self.cursor.execute(command)
 
-
     def check_database(self):
         """
-            This method check if the database is empty
-            If it is, run a method for filling it
+            This method check if there is products in the database
         """
         try:
             query = 'SELECT * FROM Products LIMIT 1'
@@ -81,29 +85,20 @@ class Database:
                 message = f'La base de données ne contient aucune table.'
                 message = f'{message} Merci de lancer le script avec l\'option --init.\n{err}'
                 raise Exception(message)
-
-        return self.cursor.fetchone()
-
-    def check_users(self):
-        """
-            This method check if there is users in the database
-        """
-        query = "SELECT * FROM Users LIMIT 1"
-        self.cursor.execute(query)
+            raise err
 
         return self.cursor.fetchone()
 
     def insert_in_database(self, query, values):
         """
-            This method insert in the database with "query" as argument and an optionnal crieterion
-            to manage possible duplicates entry
+            This method insert data in the database
         """
         try:
             self.cursor.execute(query, values)
             self.connection.commit()
         except mysql.connector.Error as err:
             if err.errno != 1062: # Duplicates entries
-                print(err)
+                raise err
 
     def select_in_database(self, query, values=None):
         """
@@ -112,7 +107,7 @@ class Database:
         try:
             self.cursor.execute(query, values)
         except mysql.connector.Error as err:
-            print(err)
+            raise err
 
         return self.cursor
 
@@ -120,8 +115,6 @@ class Database:
         """
             Insert a product in the database
         """
-
-        # Insert the product
         query = ("""INSERT INTO Products
                     (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -297,6 +290,7 @@ class Database:
         stores = list()
         brands = list()
 
+        # Create a dict for the product
         for row in product_rows:
             if not product:
                 product = {'code': row[0],
@@ -317,6 +311,7 @@ class Database:
             if brand and brand not in brands:
                 brands.append(brand)
 
+        # Add categories, stores and brands to the prodcut's dict
         product['categories'] = categories
         product['stores'] = stores
         product['brands'] = brands
@@ -325,7 +320,7 @@ class Database:
 
     def save_product(self, to_substitute, substituted):
         """
-            This method save a product as a favorites in the database
+            This method save a product in the database
         """
         query = ("""INSERT INTO Saved_products
                     (to_substitute_id, substituted_id)
@@ -343,23 +338,23 @@ class Database:
         """
             Method for selecting saved products
         """
-        query = ("""(SELECT
+        query = ("""SELECT
                         'to_substitute',
                         Saved_products.to_substitute_id,
                         Products.name,
                         Products.nutriscore_grade,
                         Products.code
                     FROM Products
-                    INNER JOIN Saved_products ON Saved_products.to_substitute_id = Products.id)
+                    INNER JOIN Saved_products ON Saved_products.to_substitute_id = Products.id
                     UNION ALL
-                    (SELECT
+                    SELECT
                         'substituted',
                         Saved_products.substituted_id,
                         Products.name,
                         Products.nutriscore_grade,
                         Products.code
                     FROM Products
-                    INNER JOIN Saved_products ON Saved_products.substituted_id = Products.id)
+                    INNER JOIN Saved_products ON Saved_products.substituted_id = Products.id
                  """)
         result = self.select_in_database(query)
 
@@ -370,6 +365,9 @@ class Database:
             name = row[2]
             nutriscore_grade = row[3]
             code = row[4]
+
+            # Make the difference between the product to substitute
+            # and the product used as a substitute
             if row[0] == 'to_substitute':
                 to_substitute_products.append({'name': name,
                                                'nutriscore_grade': nutriscore_grade,
@@ -383,7 +381,7 @@ class Database:
 
     def close_database(self):
         """
-            This method is called for closing the connection with the database
+            Method for closing the connection with the database
         """
         self.cursor.close()
         self.connection.close()

@@ -1,5 +1,5 @@
 """
-    Main part for using Pur Beurre Substitute
+    Application using Pur Beurre Substitute
     This application is made for the project 5 on OpenClassrooms during the Python courses
     The aim of this project is to use:
         - an API Rest,
@@ -25,7 +25,7 @@ class App():
     def __init__(self):
         print('=== Bienvenue dans l\'application Pur Beurre Substitute ===')
 
-        # Add arguments
+        # Add an argument for initialise the database
         parser = argparse.ArgumentParser()
         parser.add_argument('-i',
                             '--initdb',

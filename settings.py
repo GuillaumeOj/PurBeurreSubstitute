@@ -32,7 +32,7 @@ API_DATA_FORMAT = [{'name': 'product_name', 'type': str, 'length': 100, 'require
                    {'name': 'url', 'type': str, 'length': 250, 'required': True},
                    {'name': 'ingredients_text', 'type': str, 'required': False}]
 
-NUMBER_OF_SIMILAR_CATEGORIES = 4
+NUMBER_OF_SIMILAR_CATEGORIES = 3
 NUMBER_OF_PRODUCTS = 10
 NUMBER_OF_SUBSTITUTES = 10
 DISCRIMINANT_NUTRISCORE_GRADE = 'c'

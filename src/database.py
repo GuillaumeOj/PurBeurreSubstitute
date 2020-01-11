@@ -32,22 +32,29 @@ class Database:
             self.connection = mysql.connector.connect(
                 user=self.user,
                 host=self.host,
-                password=self.password,
-                database=self.db_name)
+                password=self.password)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 message = f'Les informations de connections sont fausses.'
                 message = f'{message} Merci de vérifier "settings.py"'
                 message = f'{message} ou de suivre les instructions de démarrage.\n{err}'
                 raise Exception(message)
+            raise err
+        else:
+            self.cursor = self.connection.cursor(buffered=True)
+
+    def select_database(self):
+        """
+            This method select the database
+        """
+        try:
+            self.connection.database = self.db_name
+        except mysql.connector.Error as err:
             if err.errno == errorcode.ER_BAD_DB_ERROR:
                 message = f'La base de données n\'existe pas.'
                 message = f'{message} Merci de vérifier "settings.py"'
                 message = f'{message} ou de suivre les instructions de démarrage.\n{err}'
                 raise Exception(message)
-            raise err
-        else:
-            self.cursor = self.connection.cursor(buffered=True)
 
     def read_init_file(self, init_file):
         """

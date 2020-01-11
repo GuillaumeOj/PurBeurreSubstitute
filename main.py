@@ -28,7 +28,7 @@ class App():
         # Add arguments
         parser = argparse.ArgumentParser()
         parser.add_argument('-i',
-                            '--init',
+                            '--initdb',
                             help='Initialize the Pur Beurre Substitute database',
                             action='store_true')
         arguments = parser.parse_args()

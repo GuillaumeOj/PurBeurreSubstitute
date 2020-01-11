@@ -37,16 +37,21 @@ class App():
         self.database = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
         self.database.connect_database()
 
-        # If the user use 'init' as argument, call a method in database for reading the
-        # 'init.sql' file
-        if arguments.init:
-            initialize = ['Oui', 'Non']
-            initialize = SelectionMenu(initialize)
-            initialize.display_choices('Êtes-vous sûr de vouloir réinitialiser la base de données')
-            initialize.user_input('Sélectionnez une réponse (numéro)')
+        # If the user use 'initdb' as argument, the tha application call a method in Database
+        # for reading the 'init.sql' file
+        if arguments.initdb:
+            # Confirmation message for safety and avoid 'initdb' by mistake
+            menu_title = 'Êtes-vous sûr de vouloir réinitialiser la base de données'
+            answers_title = 'Sélectionnez une réponse (numéro)'
+            answers = ['Oui', 'Non']
+
+            initialize = SelectionMenu(menu_title, answers_title, answers)
 
             if initialize.selected == 'Oui':
                 self.database.read_init_file(PBS_INIT_FILE)
+
+        # Select the database
+        self.database.select_database()
 
         # Check if database is not empty
         if self.database.check_database() is None:
@@ -54,11 +59,14 @@ class App():
 
         continue_app = True
         while continue_app:
+            # Ask the user if he wants:
+            # - Find a substitute for a product
+            # - Read a substitute already save in the database
+            menu_title = 'Que souhaitez-vous faire'
+            answers_title = 'Sélectionnez une option (numéro)'
+            answers = ['Substituer un aliment', 'Retrouver un aliment déjà substitué']
 
-            app_usage = ['Substituer un aliment', 'Retrouver un aliment déjà substitué']
-            app_usage = SelectionMenu(app_usage)
-            app_usage.display_choices('Que souhaitez-vous faire')
-            app_usage.user_input('Sélectionnez une option (numéro)')
+            app_usage = SelectionMenu(menu_title, answers_title, answers)
 
             if app_usage.selected == 'Substituer un aliment':
                 self.find_substitute()
@@ -66,9 +74,11 @@ class App():
                 self.find_saved()
 
             # Ask the user if he wants to continue or end the application
-            continue_app = SelectionMenu(['Oui', 'Non'])
-            continue_app.display_choices('Souhaitez-vous continuez à utiliser l\'application ?')
-            continue_app.user_input('Sélectionnez une réponse (numéro)')
+            menu_title = 'Souhaitez-vous continuez à utiliser l\'application ?'
+            answers_title = 'Sélectionnez une réponse (numéro)'
+            answers = ['Oui', 'Non']
+
+            continue_app = SelectionMenu(menu_title, answers_title, answers)
 
             if continue_app.selected == 'Non':
                 continue_app = False
@@ -117,43 +127,53 @@ class App():
         """
             This method is the client for the application
         """
-        category = SelectionMenu(API_CATEGORIES)
-        category.display_choices('Choisissez une catégorie')
-        category.user_input('Sélectionnez une catégorie (numéro)')
+        # Ask the user to choose a category
+        menu_title = 'Choisissez une catégorie'
+        answers_title = 'Sélectionnez une catégorie (numéro)'
+        answers = API_CATEGORIES
+
+        category = SelectionMenu(menu_title, answers_title, answers)
 
         # Display available products in the chossen category
         available_products = self.database.select_products(category.selected,
                                                            NUMBER_OF_PRODUCTS,
                                                            DISCRIMINANT_NUTRISCORE_GRADE)
 
-        # Get the user answer for the choosen product
-        products = SelectionMenu(available_products)
-        products.display_choices('Choisissez un produit')
-        products.user_input('Sélectionnez un produit (numéro)')
+        # Ask user to choose a product to substitute
+        menu_title = 'Choisissez un produit à subsituer'
+        answers_title = 'Sélectionnez un produit (numéro)'
+        answers = available_products
 
-        to_substitute = Product(**self.database.select_product(products.selected))
+        product = SelectionMenu(menu_title, answers_title, answers)
 
-        # Select in the database the substitutes to the selected product
+        to_substitute = Product(**self.database.select_product(product.selected))
+
+        # Select in the database the potential substitutes for to the selected product
         available_substitutes = self.database.select_substitutes(to_substitute,
                                                                  NUMBER_OF_SIMILAR_CATEGORIES,
                                                                  NUMBER_OF_SUBSTITUTES)
 
         if available_substitutes:
-            products = SelectionMenu(available_substitutes)
-            products.display_choices('Choisissez un substitut')
-            products.user_input('Sélectionner un substitut (numéro)')
+            # Ask the user to choose a substitute
+            menu_title = 'Choisissez un substitut'
+            answers_title = 'Sélectionner un substitut (numéro)'
+            answers = available_substitutes
 
-            substituted = Product(**self.database.select_product(products.selected))
+            substitute = SelectionMenu(menu_title, answers_title, answers)
+
+            substituted = Product(**self.database.select_product(substitute.selected))
             substituted.display()
         else:
             print('Nous n\'avons pas de substitut à vous proposer.')
             substituted = None
 
-        # Ask the user if she·he wants to save the product
         if substituted:
-            save = SelectionMenu(['Oui', 'Non'])
-            save.display_choices('Souhaitez-vous sauvegarder le produit ?')
-            save.user_input('Sélectionnez une réponse (numéro)')
+            # Ask the user if she·he wants to save the product
+            menu_title = 'Souhaitez-vous sauvegarder le produit ?'
+            answers_title = 'Sélectionnez une réponse (numéro)'
+            answers = ['Oui', 'Non']
+
+            save = SelectionMenu(menu_title, answers_title, answers)
 
             if save.selected == 'Oui':
                 self.database.save_product(to_substitute, substituted)
@@ -162,20 +182,23 @@ class App():
         """
             This method display the products already saved by the user
         """
+        # Get all products saved in the database
         saved_products = self.database.select_saved_products()
 
-        # Find all saved substitute and the original product
         if saved_products:
-            substituted = SelectionMenu(saved_products)
-            substituted.display_choices('Quel substitut souhaitez-vous consulter ?')
-            substituted.user_input('Sélectionnez le substitut (numéro)')
+            # Ask the user which product she·he wants to read
+            menu_title = 'Quel substitut souhaitez-vous consulter ?'
+            answers_title = 'Sélectionnez le substitut (numéro)'
+            answers = saved_products
+
+            substituted = SelectionMenu(menu_title, answers_title, answers)
         else:
             print('Aucun substitut n\'a était sauvegardé pour l\'instant')
             substituted = None
 
-        # Display the selected subsitute
         if substituted:
-            product = Product(**self.database.select_product(substituted.selected[1]))
+            # Display the selected subsitute
+            product = Product(**self.database.select_product(substituted.selected))
             product.display()
 
 

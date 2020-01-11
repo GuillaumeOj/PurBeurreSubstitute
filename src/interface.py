@@ -26,14 +26,27 @@ class SelectionMenu:
         """
         title = f'\n=== {title} ==='
         print(title)
-        for i, choice in enumerate(self.choices):
-            if isinstance(choice, str):
-                line = f'{i + 1}. {choice}'
-            if isinstance(choice, dict):
-                line = f"{i + 1}. {choice['name']}"
-                line = f"{line} | {choice['nutriscore_grade']}"
-                line = f"{line} | {choice['code']}"
-            print(line)
+        if isinstance(self.choices, tuple):
+            to_substitute_list = self.choices[0]
+            substituted_list = self.choices[1]
+
+            i = 1
+
+            for to_substitute, substituted in zip(to_substitute_list, substituted_list):
+                line = f"{i}. {to_substitute['name']}"
+                line = f"{line} ==> Substitué par ==>"
+                line = f"{line} {substituted['name']}"
+                i += 1
+                print(line)
+        else:
+            for i, choice in enumerate(self.choices):
+                if isinstance(choice, str):
+                    line = f'{i + 1}. {choice}'
+                if isinstance(choice, dict):
+                    line = f"{i + 1}. {choice['name']}"
+                    line = f"{line} | {choice['nutriscore_grade']}"
+                    line = f"{line} | {choice['code']}"
+                print(line)
 
     def user_input(self, title):
         """

@@ -164,16 +164,18 @@ class App():
         """
         saved_products = self.database.select_saved_products()
 
+        # Find all saved substitute and the original product
         if saved_products:
-            substitute = SelectionMenu(saved_products)
-            substitute.display_choices('Quel produit souhaitez-vous consulter ?')
-            substitute.user_input('Sélectionnez le produit (numéro)')
+            substituted = SelectionMenu(saved_products)
+            substituted.display_choices('Quel substitut souhaitez-vous consulter ?')
+            substituted.user_input('Sélectionnez le substitut (numéro)')
         else:
             print('Aucun substitut n\'a était sauvegardé pour l\'instant')
-            substitute = None
+            substituted = None
 
-        if substitute:
-            product = Product(**self.database.select_product(substitute.selected))
+        # Display the selected subsitute
+        if substituted:
+            product = Product(**self.database.select_product(substituted.selected[1]))
             product.display()
 
 

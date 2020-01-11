@@ -336,13 +336,43 @@ class Database:
         """
             Method for selecting saved products
         """
-        query = ("SELECT Products.name, Products.code FROM Products WHERE Products.saved = 1")
+        query = ("""(SELECT
+                        'to_substitute',
+                        Saved_products.to_substitute_id,
+                        Products.name,
+                        Products.nutriscore_grade,
+                        Products.code
+                    FROM Products
+                    INNER JOIN Saved_products ON Saved_products.to_substitute_id = Products.id)
+                    UNION ALL
+                    (SELECT
+                        'substituted',
+                        Saved_products.substituted_id,
+                        Products.name,
+                        Products.nutriscore_grade,
+                        Products.code
+                    FROM Products
+                    INNER JOIN Saved_products ON Saved_products.substituted_id = Products.id)
+                 """)
         result = self.select_in_database(query)
-        available_products = list()
-        for (name, code) in result:
-            available_products.append({'name': name, 'code': code})
 
-        return available_products
+        to_substitute_products = list()
+        substituted_products = list()
+
+        for row in result:
+            name = row[2]
+            nutriscore_grade = row[3]
+            code = row[4]
+            if row[0] == 'to_substitute':
+                to_substitute_products.append({'name': name,
+                                               'nutriscore_grade': nutriscore_grade,
+                                               'code': code})
+            else:
+                substituted_products.append({'name': name,
+                                             'nutriscore_grade': nutriscore_grade,
+                                             'code': code})
+
+        return (to_substitute_products, substituted_products)
 
     def close_database(self):
         """

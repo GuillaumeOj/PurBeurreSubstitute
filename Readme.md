@@ -1,17 +1,18 @@
 # Contents page
-- [What is Pur Beurre Substitute?](#what-is-pur-beurre-substitute)
-- [How to insall?](#how-to-install)
-- [How to use this application?](#how-to-use-this-application)
-- [How it works?](#how-it-works)
+- [I. What is Pur Beurre Substitute?](#i-what-is-pur-beurre-substitute)
+- [II. How to insall?](#ii-how-to-install)
+- [III. How to use this application?](#iii-how-to-use-this-application)
+- [IV. To do list](#iv-to-do-list)
+- [V. How it works?](#v-how-it-works)
 
-# What is Pur Beurre Substitute? 
+# I. What is Pur Beurre Substitute? 
 [⇧ *Top*](#contents-page)
 
 The aim of this application is to propose a substitute for a food product.
 The application use the open database provide by the [Open Food Facts](https://world.openfoodfacts.org/).
 This application is made for the project 5 from [OpenClassrooms'](https://openclassrooms.com/fr/projects/157/assignment) Python course.
 
-# How to insall?
+# II. How to insall?
 [⇧ *Top*](#contents-page)
 
 Be sure MySQL is installed and works.
@@ -62,7 +63,7 @@ In the future, you just have to run the previous command without the argument
 Enjoy the app !
 
 
-# How to use this application?
+# III. How to use this application?
 [⇧ *Top*](#contents-page)
 
 The first version of this application is built for being used in a terminal's interface.
@@ -193,12 +194,12 @@ Each product is associated with a number and displayed in a list format.
 The user answers with the associated number.
 If the user gives a wrong answer (`A` for example), the program asks the question again.
 
-# To do list
+# IV. To do list
 [⇧ *Top*](#contents-page)
 
 See [Trello](https://trello.com/b/W31VG22I/pur-beurre)
 
-# How it works?
+# V. How it works?
 [⇧ *Top*](#contents-page)
 
 ## First start

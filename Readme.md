@@ -1,6 +1,6 @@
 # Contents page
 - [I. What is Pur Beurre Substitute?](#i-what-is-pur-beurre-substitute)
-- [II. How to insall?](#ii-how-to-install)
+- [II. How to install?](#ii-how-to-install)
 - [III. How to use this application?](#iii-how-to-use-this-application)
 - [IV. To do list](#iv-to-do-list)
 - [V. How it works?](#v-how-it-works)
@@ -12,7 +12,7 @@ The aim of this application is to propose a substitute for a food product.
 The application use the open database provide by the [Open Food Facts](https://world.openfoodfacts.org/).
 This application is made for the project 5 from [OpenClassrooms'](https://openclassrooms.com/fr/projects/157/assignment) Python course.
 
-# II. How to insall?
+# II. How to install?
 [⇧ *Top*](#contents-page)
 
 Be sure MySQL is installed and works.

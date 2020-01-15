@@ -260,4 +260,5 @@ The request results are orderd by:
 - And common categories (from the biggest to the smallest)
 
 The request return only `Y` products.
+
 ***Note***: `Y` can be changed in [settings.py](settings.py) (constant: `NUMBER_OF_SUBSTITUTES`)

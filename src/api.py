@@ -11,10 +11,10 @@ from progress.bar import FillingCirclesBar
 
 class Api:
     """
-        This class manage differents operation with the api:
-            - request data
+        This class is used for interact with the Open Food Fact API:
             - download data
             - read data
+            - transform and clear data for an insertion in the database
     """
 
     def __init__(self, url_base, tmp_dir):

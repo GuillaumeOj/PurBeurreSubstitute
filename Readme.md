@@ -1,3 +1,9 @@
+# Contents page
+- [What is Pur Beurre Substitute?](#what-is-pur-beurre-substitute)
+- [How to insall?](#how-to-install)
+- [How to use this application?](#how-to-use-this-application)
+- [How it works?](#how-it-works)
+
 # What is Pur Beurre Substitute?
 
 The aim of this application is to propose a substitute for a food product.
@@ -6,7 +12,7 @@ This application is made for the project 5 from [OpenClassrooms'](https://opencl
 
 # How to insall?
 
-Be sure MySQL was installed and works.
+Be sure MySQL is installed and works.
 
 Create a user with all privileges:
 ```SQL
@@ -14,19 +20,13 @@ CREATE USER 'pbs'@'host' IDENTIFIED BY 'pbs' -- Replace 'host' by the host name 
 GRANT ALL ON *.* TO 'pbs'@'host';            -- Don't forget to replace 'host'
 ```
 
-With your console go to the directory which contains Pur Beurre Substitute.
-Then run the following command in your console:
-```
-mysql -u pbs -p pbs < init.sql
-```
-This command will create a database named 'PBS' with all associated tables.
-
-Then clone this repository on your computer. Run :
+Clone this current repository on your computer. Run :
 ```
 git clone git@github.com:GuillaumeOj/PurBeurreSubstitute.git
 or
 git clone https://github.com/GuillaumeOj/PurBeurreSubstitute.git
 ```
+
 Create a virtual environement in your directory:
 ```
 virtualenv -p python3 env
@@ -35,6 +35,7 @@ or for PowerShell:
 ```powershell
 virtualenv -p $env:python3 env
 ```
+
 Activate your virtual environement:
 ```
 source env/bin/activate
@@ -43,18 +44,23 @@ or for PowerShell:
 ```powershell
 .env/scripts/activate.ps1
 ```
+
 Install `requirements.txt`:
 ```
 pip install -r requirements.txt
 ```
-Run `main.py`:
+
+Run `main.py` with the argument `--initdb` (or `-i`:
 ```
-python main.py
+python main.py --initdb
 ```
+
+In the future, you just have to run the previous command without the argument
+
 Enjoy the app !
 
 
-# How to use?
+# How to use this application?
 
 The first version of this application is built for being used in a terminal's interface.
 The user interacted with it only with his keyboard.

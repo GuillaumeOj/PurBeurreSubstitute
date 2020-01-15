@@ -200,18 +200,64 @@ See [Trello](https://trello.com/b/W31VG22I/pur-beurre)
 
 ### Download and filter the data
 
-Th application analyze the database to know if its empty or not. If its empty, the application download the data.
-All data is downloaded from the [Open Food Fact API](https://fr.openfoodfacts.org/) as JSON files in a ```tmp/``` directory.
-Then the application fill the database with those JSON files. Each products are analysed with this method:
-- Is there a ```product_name```?
-- Is there a ```code```?
-- Is there a ```nutriscore_grade```?
-- Is there a ```nova_group```?
-- And is there an `url`?
-
-We also check the value for ```categories_lc``` is ```fr```.
+The application check the database to know if there is already product in the "Products'" table. If its empty, the application download the data.
+All products are downloaded from the [Open Food Fact API](https://fr.openfoodfacts.org/) as JSON files in a `tmp/` directory.
+Before the product were inserted in the database, the application cheack each product to verify if there is the minium required data:
+- Product name
+- Code
+- Nutriscore grade
+- Categories
+- URL
 
 ### Insert data in the database
 
-If all these criteria are satisfied, the product is registered in the database.
-If a product is duplicated, for example ```Nutella``` in differrent quantity (big, medium and little pot) or with the same barcode, the application may update the database with the most recently updated product.
+If all these criteria are satisfied, the product is inserted in the database. For now, the application ignore potential duplicated products (same name and same code).
+
+## Normal run
+
+If the database is not empty, then the application run each step as describe in "[How to use this application?](#how-to-use-this-application)"
+
+## Method for finding substitutes
+
+All substitutes are selected thanks to a unique SQL request:
+```SQL
+SELECT
+    Products_categories.product_id,
+    COUNT(Products_categories.product_id) AS common_categories,
+    Products.name,
+    Products.code,
+    Products.nutriscore_grade
+FROM Products_categories
+INNER JOIN Products ON Products.id = Products_categories.product_id
+WHERE 
+    Products_categories.category_id IN (
+        SELECT Products_categories.category_id
+        FROM Products_categories
+        INNER JOIN Products ON Products_categories.product_id = Products.id
+        WHERE Products.code = %s)
+    AND Products.code != %s
+    AND Products.nutriscore_grade <= (
+        SELECT Products.nutriscore_grade
+        FROM Products
+        WHERE Products.code = %s)
+GROUP BY Products_categories.product_id
+HAVING common_categories >= %s
+ORDER BY
+    Products.nutriscore_grade,
+    common_categories DESC
+LIMIT %s
+```
+
+This request is based on several criterion:
+- `X` common categories between the select product and the potential substitute
+- the substitute's code has to be different from the original product
+- the nutriscore grade has to be better are equal
+
+***Note***: `X` can be changed in [settings.py](settings.py) (constant: `NUMBER_OF_SIMILAR_CATEGORIES`)
+
+The request results are orderd by:
+- Nutriscore grade
+- And common categories (from the biggest to the smallest)
+
+The request return only `Y` products.
+***Note***: `Y` can be changed in [settings.py](settings.py) (constant: `NUMBER_OF_SUBSTITUTES`)

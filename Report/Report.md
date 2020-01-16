@@ -1,3 +1,12 @@
+---
+title: "Développeur d'application Python - Projet 5"
+author:
+  - 'Etudiant : Guillaume OJARDIAS'
+  - 'Mentor : Erwan KERIBIN'
+  - 'Mentor évaluateur : Addi AIT-MLOUK'
+geometry: margin=1cm
+---
+
 # Présentation
 
 Le but de ce projet était de manipuler une API (Celle d'[Open Food Facts](https://fr.openfoodfacts.org/) en l'occurence) et de stocker l'ensemble des données dans une base de données SQL (ici [MySQL](https://www.mysql.com/fr/)).

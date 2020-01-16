@@ -21,7 +21,8 @@ Url gitHub du projet : https://github.com/GuillaumeOj/PurBeurreSubstitute
 ## Organisation
 
 Le programme est composé de plusieurs objets :
-- l'application (*App*)
+
+- l'application avec laquelle l'utilisateur va interagir (*App*)
 - un objet dédié aux opérations avec l'API (*API*)
 - une classe dédiée aux interactions avec la base de données (*Database*)
 - un objet pour la gestion de l'affichage des informations (*Interface*)

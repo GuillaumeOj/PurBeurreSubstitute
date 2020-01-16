@@ -52,6 +52,7 @@ class Api:
             headers = {'User-agent': 'Pur Beurre Substitute - Mac OS X 10.13 - Version 1.0'}
 
             # A progress bar for seeing the application working
+            print('')
             progress_bar = f'Téléchargement en cours de la catégorie "{category}" :'
             progress_bar = FillingCirclesBar(progress_bar, max=self.pages)
             for page in range(self.pages):
@@ -87,6 +88,7 @@ class Api:
         """
             This method read json files and return only data on specific key
         """
+        print('')
         progress_bar = 'Lecture des données en cours :'
         progress_bar_count = len(self.categories) * self.pages
         progress_bar = FillingCirclesBar(progress_bar, max=progress_bar_count)
@@ -111,7 +113,8 @@ class Api:
             This method drop data with missing keys
         """
         index_list = list()
-        progress_bar = 'Nettoyage des produits avec données manquantes :'
+        print('')
+        progress_bar = 'Suppression des produits avec données manquantes :'
         progress_bar = FillingCirclesBar(progress_bar, max=len(self.data))
         for i, dictionary in enumerate(self.data):
             try:
@@ -142,7 +145,8 @@ class Api:
         """
             This method format the data to the required format for the database
         """
-        progress_bar = 'Formattage des données :'
+        print('')
+        progress_bar = 'Mise en forme des données :'
         progress_bar = FillingCirclesBar(progress_bar, max=len(self.data))
         for i, dictionary in enumerate(self.data):
             for key_format in data_format:
@@ -183,7 +187,12 @@ class Api:
         """
             This method is called for deleting tmp files
         """
-        rmtree(self.tmp_dir)
+        try:
+            rmtree(self.tmp_dir)
+            print('\n==> Fichiers temporaires supprimés')
+        except OSError as err:
+            raise err
+
 
 
 if __name__ == '__main__':

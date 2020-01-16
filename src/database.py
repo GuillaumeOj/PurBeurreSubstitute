@@ -117,7 +117,7 @@ class Database:
         """
             Insert a product in the database
         """
-        print('Insertion des produits...')
+        print('\nInsertion des produits...')
         query = ("""INSERT IGNORE INTO Products
                     (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -208,10 +208,7 @@ class Database:
 
         return products
 
-    def select_substitutes(self,
-                           selected_product,
-                           number_of_similar_categories,
-                           number_of_substitutes):
+    def select_substitutes(self, selected_product, number_of_categories, number_of_substitutes):
         """
             Method for select all available subsitutes for the selected product
         """
@@ -244,7 +241,7 @@ class Database:
         query_values = (selected_product.code,
                         selected_product.code,
                         selected_product.code,
-                        number_of_similar_categories,
+                        number_of_categories,
                         number_of_substitutes)
 
         subsitutes = self.select_in_database(query, query_values)
@@ -326,7 +323,7 @@ class Database:
         """
             This method save a product in the database
         """
-        query = ("""INSERT INTO Saved_products
+        query = ("""INSERT IGNORE INTO Saved_products
                     (to_substitute_id, substituted_id)
                     VALUES (
                         (SELECT Products.id FROM Products WHERE Products.code = %s),

@@ -35,11 +35,12 @@ class App():
         self.database = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
         self.database.connect_database()
 
-        # If the user use 'initdb' as argument, the tha application call a method in Database
+        # If the user use 'initdb' as argument, the application call a method in Database
         # for reading the 'init.sql' file
         if arguments.initdb:
             # Confirmation message for safety and avoid 'initdb' by mistake
-            menu_title = 'Êtes-vous sûr de vouloir mettre la base de données par défaut ?'
+            menu_title = 'Êtes-vous sûr de vouloir initialiser la base de données à ses valeurs'
+            menu_title = f'{menu_title} par défaut ?'
             answers_title = 'Sélectionnez une réponse (numéro)'
             answers = ['Oui', 'Non']
 
@@ -89,15 +90,15 @@ class App():
         """
             This method initialise the database if its empty
         """
-        print('========== Première exécution de l\'application ===========')
-        print('==> Téléchargement des données depuis Open Food Fact')
+        print('\n========== Première exécution de l\'application ===========')
+        print('\n==> Téléchargement des données depuis l\'Open Food Facts')
 
         # Initialize the API
         api = Api(API_URL_BASE, TMP_DIR)
 
         # Download data with the API
         api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
-        print('==> Téléchargement des données terminé !')
+        print('\n==> Téléchargement des données terminé !')
 
         # Read data downloaded and clean uncompleted products
         api.read_json_with_key('products')
@@ -113,8 +114,6 @@ class App():
 
         # Delete temporary files
         api.delete_files()
-
-        print('==> Fichiers temporaires supprimés')
 
     def find_substitute(self):
         """

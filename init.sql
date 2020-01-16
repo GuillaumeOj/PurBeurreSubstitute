@@ -117,7 +117,6 @@ CREATE TABLE Saved_products (
     to_substitute_id INT UNSIGNED NOT NULL,
     substituted_id INT UNSIGNED NOT NULL,
     PRIMARY KEY(to_substitute_id, substituted_id),
-    UNIQUE INDEX ind_to_substitute_substituted(to_substitute_id, substituted_id),
     CONSTRAINT fk_to_substitute_id
         FOREIGN KEY (to_substitute_id)
         REFERENCES Products(id)

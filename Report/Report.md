@@ -51,15 +51,22 @@ Les *Users stories* peuvent être consultées sur le Trello suivant : https://tr
 
 ## MySQL
 
-- Déjà utlisé auparavant mais pas aussi poussé
-- Réalisation de requêtes "complexes" pas si difficile mais nécessite une bonne démarche de réflexion
-- Essayer de faire le maximum dans la requête plutôt que retravailler les données par la suite
+Les bases de données SQL sont des outils très puissants. Elles ont l'avantage, selon moi, d'avoir un fonctionnement de base très facile à prendre en main. Elles restent cependant des outils très puissants permettant de réaliser des recherches très complexes.
 
-## Python
+Dans ce projet, l'exemple le plus marquant est la requête permettant de sélectionner une liste de substitut.
+En effet dans le fonctionnement du programme, un subsitut est caractérisé par :
 
-- Amélioration en POO
-- Gestion des erreurs à perfectionner
-- Simplification du code pas toujours facile
+- au moins un minimum de catégories en commun (3 dans les paramètres de base)
+- un nutriscore meilleur ou égal au produit d'origine
+
+Or, les catégories et le nutriscore ne sont pas stockées dans la même table (respectivement ***Categories*** et ***Products***)
+
+Il a donc fallu construire cette requête étape par étape en se posant les questions suivantes :
+
+- quelles informations je souhaite récupérer
+- quelles tables je vais devoir interroger
+- quels critères de sélection vais-je devoir utiliser
+- comment dois-je organiser les résultats
 
 ## Utilisation d'une API
 

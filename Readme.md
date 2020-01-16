@@ -53,7 +53,7 @@ Install `requirements.txt`:
 pip install -r requirements.txt
 ```
 
-Run `main.py` with the argument `--initdb` (or `-i`:
+Run `main.py` with the argument `--initdb` (or `-i`):
 ```
 python main.py --initdb
 ```

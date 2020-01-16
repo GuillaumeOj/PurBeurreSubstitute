@@ -73,7 +73,7 @@ class App():
                 self.find_saved()
 
             # Ask the user if he wants to continue or end the application
-            menu_title = 'Souhaitez-vous continuez à utiliser l\'application ?'
+            menu_title = 'Souhaitez-vous continuer à utiliser l\'application ?'
             answers_title = 'Sélectionnez une réponse (numéro)'
             answers = ['Oui', 'Non']
 

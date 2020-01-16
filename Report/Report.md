@@ -70,12 +70,15 @@ Il a donc fallu construire cette requête étape par étape en se posant les que
 
 ## Utilisation d'une API
 
-- Documentation pas toujours clair
-- Données récupérées a traiter avec des pincettes
-- Forte dépendance de la stabilité de l'API
+L'autre aspect important et nouveau dans ce projet, est l'utilisation d'une API.
 
-## Gestion de projet
+La plus grosse difficultés rencontrées aura était dès le début d'être confronté à une documentation peu détaillée sur l'utilisation de celle-ci.
+En effet, dans l'idée, les actions possibles avec l'API d'Open Food Facts sont simples (lecture et écriture). La pratique aurait dû être assez proche de ce qui est abordé dans le cours associé au projet ([Utilisez des API REST dans vos projets web](https://openclassrooms.com/fr/courses/3449001-utilisez-des-api-rest-dans-vos-projets-web))
 
-- Plus d'assiduité dans le planning
-- Prendre des temps pour analyser le travail fait dans son ensemble
+Cependant, toute les subtilités liées aux arguments à passer lors de la requête ne sont pas expliqué dans le wiki dédié aux développeurs. Par exemple :
+
+- utilisation de `action: process` pour le téléchargement des données
+- utilisation de `tagtype_0` puis `tag_contains_0` et enfin `tag_0` pour indiquer que l'on cherche, par exemple, les produis contenant tel terme dans les catégories (cas de l'application)
+
+Finalement, les échanges avec les autres étudiants, les essais multiples et la relecture acharnées des informations du wiki, ont rendu possible l'utilisation de l'API.
 

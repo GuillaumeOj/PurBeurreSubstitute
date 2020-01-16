@@ -45,7 +45,7 @@ Concrétement, le programme se déroule de la manière suivante :
 Pour la réalisation de ce projet, je me suis basé sur une méthode dite agile articulée autours de *User stories*.
 Dans ce cas, cette méthode mettait en évidence un seul utilisateur interagissant avec l'application.
 
-***A DETAILLER !***
+Les *Users stories* peuvent être consultées sur le Trello suivant : https://trello.com/b/W31VG22I/pur-beurre
 
 # Bilan
 

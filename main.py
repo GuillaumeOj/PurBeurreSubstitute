@@ -39,7 +39,7 @@ class App():
         # for reading the 'init.sql' file
         if arguments.initdb:
             # Confirmation message for safety and avoid 'initdb' by mistake
-            menu_title = 'Êtes-vous sûr de vouloir réinitialiser la base de données'
+            menu_title = 'Êtes-vous sûr de vouloir mettre la base de données par défaut ?'
             answers_title = 'Sélectionnez une réponse (numéro)'
             answers = ['Oui', 'Non']
 

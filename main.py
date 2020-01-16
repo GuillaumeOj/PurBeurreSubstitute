@@ -127,19 +127,24 @@ class App():
 
         category = SelectionMenu(menu_title, answers_title, answers)
 
-        # Display available products in the chossen category
-        available_products = self.database.select_products(category.selected,
-                                                           NUMBER_OF_PRODUCTS,
-                                                           DISCRIMINANT_NUTRISCORE_GRADE)
 
         # Ask user to choose a product to substitute
-        menu_title = 'Choisissez un produit à subsituer'
-        answers_title = 'Sélectionnez un produit (numéro)'
-        answers = available_products
+        to_substitute = None
 
-        product = SelectionMenu(menu_title, answers_title, answers)
+        while not to_substitute:
+            # Display available products in the chossen category
+            available_products = self.database.select_products(category.selected,
+                                                               NUMBER_OF_PRODUCTS,
+                                                               DISCRIMINANT_NUTRISCORE_GRADE)
+            available_products.append('Afficher d\'autres produits au hasard')
+            menu_title = 'Choisissez un produit à subsituer'
+            answers_title = 'Sélectionnez un produit (numéro)'
+            answers = available_products
 
-        to_substitute = Product(**self.database.select_product(product.selected))
+            product = SelectionMenu(menu_title, answers_title, answers)
+
+            if product.selected != 'Afficher d\'autres produits au hasard':
+                to_substitute = Product(**self.database.select_product(product.selected))
 
         # Select in the database the potential substitutes for to the selected product
         available_substitutes = self.database.select_substitutes(to_substitute,

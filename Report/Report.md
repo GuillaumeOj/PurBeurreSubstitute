@@ -4,7 +4,7 @@ author:
   - 'Etudiant : Guillaume OJARDIAS'
   - 'Mentor : Erwan KERIBIN'
   - 'Mentor évaluateur : Addi AIT-MLOUK'
-geometry: margin=1cm
+geometry: "left=1cm,right=1cm,top=1cm,bottom=2cm"
 ---
 
 # Présentation

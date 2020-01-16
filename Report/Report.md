@@ -82,3 +82,12 @@ Cependant, toute les subtilités liées aux arguments à passer lors de la requ�
 
 Finalement, les échanges avec les autres étudiants, les essais multiples et la relecture acharnées des informations du wiki, ont rendu possible l'utilisation de l'API.
 
+
+## Python
+
+De manière plus générale, et cela reste le coeur de cette formation, ce projet à permis d'approfondir l'utilisation de Python.
+
+- Amélioration en POO
+- Gestion des erreurs à perfectionner
+- Simplification du code pas toujours facile
+

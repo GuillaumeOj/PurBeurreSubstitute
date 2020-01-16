@@ -94,11 +94,13 @@ class Database:
             This method insert data in the database
         """
         try:
-            self.cursor.execute(query, values)
+            if isinstance(values, tuple):
+                self.cursor.execute(query, values)
+            else:
+                self.cursor.executemany(query, values)
             self.connection.commit()
         except mysql.connector.Error as err:
-            if err.errno != 1062: # Duplicates entries
-                raise err
+            raise err
 
     def select_in_database(self, query, values=None):
         """
@@ -111,73 +113,75 @@ class Database:
 
         return self.cursor
 
-    def insert_product(self, product):
+    def insert_products(self, products):
         """
             Insert a product in the database
         """
-        query = ("""INSERT INTO Products
+        print('Insertion des produits...')
+        query = ("""INSERT IGNORE INTO Products
                     (code, name, common_name, quantity, ingredients_text, nutriscore_grade, url)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                  """)
-        values = (product.code,
-                  product.name,
-                  product.common_name,
-                  product.quantity,
-                  product.ingredients_text,
-                  product.nutriscore_grade,
-                  product.url)
+        values = [(product.code,
+                   product.name,
+                   product.common_name,
+                   product.quantity,
+                   product.ingredients_text,
+                   product.nutriscore_grade,
+                   product.url) for product in products]
         self.insert_in_database(query, values)
 
+        print('Insertion des catégories...')
         # Insert categories
-        query = ("INSERT INTO Categories (name) VALUES (%s)")
-        for category in product.categories:
-            values = (category,)
-            self.insert_in_database(query, values)
+        query = ("INSERT IGNORE INTO Categories (name) VALUES (%s)")
+        values = [(category,) for product in products for category in product.categories]
+        self.insert_in_database(query, values)
 
+        print('Insertion des marques...')
         # Insert brands
-        query = ("INSERT INTO Brands (name) VALUES (%s)")
-        for brand in product.brands:
-            values = (brand,)
-            self.insert_in_database(query, values)
+        query = ("INSERT IGNORE INTO Brands (name) VALUES (%s)")
+        values = [(brand,) for product in products for brand in product.brands]
+        self.insert_in_database(query, values)
 
+        print('Insertion des magasins...')
         # Insert stores
-        query = ("INSERT INTO Stores (name) VALUES (%s)")
-        for store in product.stores:
-            values = (store,)
-            self.insert_in_database(query, values)
+        query = ("INSERT IGNORE INTO Stores (name) VALUES (%s)")
+        values = [(store,) for product in products for store in product.stores]
+        self.insert_in_database(query, values)
 
+        print('Association des produits et des catégories...')
         # Insert products categories
-        query = ("""INSERT INTO Products_categories (product_id, category_id)
+        query = ("""INSERT IGNORE INTO Products_categories (product_id, category_id)
                     VALUES (
-                        (SELECT id FROM Products WHERE name=%s AND code=%s),
+                        (SELECT id FROM Products WHERE code=%s),
                         (SELECT id FROM Categories WHERE name=%s)
                     )
                  """)
-        for category in product.categories:
-            values = (product.name, product.code, category)
-            self.insert_in_database(query, values)
+        values = [(product.code,
+                   category) for product in products for category in product.categories]
+        self.insert_in_database(query, values)
 
+        print('Association des produits et des marques...')
         # Insert products brands
-        query = ("""INSERT INTO Products_brands (product_id, brand_id)
+        query = ("""INSERT IGNORE INTO Products_brands (product_id, brand_id)
                     VALUES (
-                        (SELECT id FROM Products WHERE name=%s AND code=%s),
+                        (SELECT id FROM Products WHERE code=%s),
                         (SELECT id FROM Brands WHERE name=%s)
                     )
                  """)
-        for brand in product.brands:
-            values = (product.name, product.code, brand)
-            self.insert_in_database(query, values)
+        values = [(product.code, brand) for product in products for brand in product.brands]
+        self.insert_in_database(query, values)
 
+        print('Association des produits et des magasins...')
         # Insert products stores
-        query = ("""INSERT INTO Products_stores (product_id, store_id)
+        query = ("""INSERT IGNORE INTO Products_stores (product_id, store_id)
                     VALUES (
-                        (SELECT id FROM Products WHERE name=%s AND code=%s),
+                        (SELECT id FROM Products WHERE code=%s),
                         (SELECT id FROM Stores WHERE name=%s)
                     )
                  """)
-        for store in product.stores:
-            values = (product.name, product.code, store)
-            self.insert_in_database(query, values)
+        values = [(product.code, store) for product in products for store in product.stores]
+        self.insert_in_database(query, values)
 
     def select_products(self, selected_category, number_of_products, discriminant_criterion):
         """

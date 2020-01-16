@@ -8,8 +8,6 @@
 """
 import argparse
 
-from progress.bar import FillingCirclesBar
-
 from settings import * # pylint: disable=wildcard-import
 from src.database import Database
 from src.product import Product
@@ -111,12 +109,7 @@ class App():
             product = Product(**product_data)
 
         # Insert products in the database
-        progress_bar = FillingCirclesBar(f'Insertion des produits dans la base de données : ',
-                                         max=len(Product.products))
-        for product in Product.products:
-            self.database.insert_product(product)
-            progress_bar.next()
-        progress_bar.finish()
+        self.database.insert_products(product.products)
 
         # Delete temporary files
         api.delete_files()

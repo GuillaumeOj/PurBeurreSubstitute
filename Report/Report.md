@@ -33,6 +33,7 @@ En plus de ces objets, le programme est accompagné d'un fichier `init.sql` perm
 ## Déroulement
 
 Concrétement, le programme se déroule de la manière suivante :
+
 - Au lancement vérification de l'état de la base de données.
 - Si la base de données est vide, téléchargement des produits depuis l'API d'[Open Food Facts](https://fr.openfoodfacts.org/) et insertion des produits dans la base de données. Puis le programme continue son exécution.
 - Lancement d'un cycle de sélection pour l'utilisateur·rice (choix d'une catégorie, d'un produit puis d'un substitut).

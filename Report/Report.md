@@ -85,9 +85,10 @@ Finalement, les échanges avec les autres étudiants, les essais multiples et le
 
 ## Python
 
-De manière plus générale, et cela reste le coeur de cette formation, ce projet à permis d'approfondir l'utilisation de Python.
+De manière plus générale, et cela reste le coeur de cette formation, ce projet à permis d'approfondir encore l'utilisation de Python.
 
-- Amélioration en POO
-- Gestion des erreurs à perfectionner
-- Simplification du code pas toujours facile
+La notion de programation orientée objet ayant déjà était abordée lors du projet 3 (voir : https://github.com/GuillaumeOj/HelpMacGyver), ce projet aura était l'occasion de continuer dans cette direction et d'approfondir l'utilisation des classes. Notament, chose nouvelle pour moi, l'utilisation d'une classe *App* plutôt que l'utilisation d'une fonctione *main()* (habitude conservée du début de la formation).
+
+L'aspect sur lequel j'aimerais être plus à l'aise est la gestion des erreurs.
+Dans ce projet, j'ai essayé de faire appel à l'utilisation de la structure `try... except`. Cependant, je ne suis pas toujours sûr de gérer correctement les exceptions potentiellement levée par cette structure.
 

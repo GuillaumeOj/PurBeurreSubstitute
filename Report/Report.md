@@ -92,3 +92,13 @@ La notion de programmation orientée objet étant déjà abordée lors du projet
 L'aspect sur lequel j'aimerais être plus à l'aise est la gestion des erreurs.
 Dans ce projet, j'ai essayé de faire appel à l'utilisation de la structure `try... except`. Cependant, je ne suis pas toujours sûr de gérer correctement les exceptions potentiellement levée par cette structure.
 
+# Conclusion
+
+Pour conclure sur ce projet, je dirais qu'il a été riche en nouveauté (MySQL et API REST).
+
+Ce projet m'a poussé à redoubler d'imagination pour trouver des solutions à chaque problème se présentant pour chaque nouvelle fonctionnalité (comment télécharger les produits, comment insérer les produits dans la base de données, comment trouver un substitut, etc.)
+
+Ce projet m'aura surtout permis de comprendre, que même si les cours associés au projet regorge d'informations évidemment utile à la réalisation de celui-ci, toutes les réponses aux questions que l'on se posera durant sa réalisation ne s'y trouve pas.
+Il faut sans cesse chercher d'autres sources d'informations, rester à l'affût d'autres méthodes, tester d'éventuels modules plutôt que de réinventer la roue, etc.
+
+En résumé, encore un bon bout de chemin parcouru et encore plein de nouveaux défis à relever pour la suite !

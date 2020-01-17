@@ -80,7 +80,7 @@ Cependant, toute les subtilités liées aux arguments à passer lors de la requ�
 - utilisation de `action: process` pour le téléchargement des données
 - utilisation de `tagtype_0` puis `tag_contains_0` et enfin `tag_0` pour indiquer que l'on cherche, par exemple, les produis contenant tel terme dans les catégories (cas de l'application)
 
-Finalement, les échanges avec les autres étudiants, les essais multiples et la relecture acharnées des informations du wiki, ont rendu possible l'utilisation de l'API.
+Finalement, les échanges avec les autres étudiants, les essais multiples et les relectures multiples des informations du wiki, ont rendu possible l'utilisation de l'API.
 
 
 ## Python

@@ -9,12 +9,14 @@ geometry: margin=1.5cm
 
 # Présentation
 
-Le but de ce projet était de manipuler une API (Celle d'[Open Food Facts](https://fr.openfoodfacts.org/) en l'occurence) et de stocker l'ensemble des données dans une base de données SQL (ici [MySQL](https://www.mysql.com/fr/)).
-L'application du projet permet au final de consulter une base de données de produits alimentaires et de proposer à l'utilisateur·rice un produit alternatif.
+Le but de ce projet était de manipuler une API (ici celle d'[Open Food Facts](https://fr.openfoodfacts.org/)) et de stocker l'ensemble des données dans une base de données SQL (ici [MySQL](https://www.mysql.com/fr/)) pour ensuite les manipuler.
+L'application du projet permet au final de consulter une base de données de produits alimentaires et de proposer à l'utilisateur·rice un produit alternatif (désigné par "**substitut** dans la suite du document).
 
 ## Code source
 
-Url gitHub du projet : https://github.com/GuillaumeOj/PurBeurreSubstitute
+Le code source du projet est disponible sur la plateforme GitHub : https://github.com/GuillaumeOj/PurBeurreSubstitute
+
+L'ensemble du code source est écrit en Python pour la partie application et utilise le SQL pour les interactions avec la base de données (script de création, insertion de données, sélection de données).
 
 # Fonctionnement du programme
 
@@ -22,19 +24,21 @@ Url gitHub du projet : https://github.com/GuillaumeOj/PurBeurreSubstitute
 
 Le programme est composé de plusieurs objets :
 
-- l'application avec laquelle l'utilisateur va interagir (*App*)
-- un objet dédié aux opérations avec l'API (*API*)
-- une classe dédiée aux interactions avec la base de données (*Database*)
-- un objet pour la gestion de l'affichage des informations (*Interface*)
-- un objet pour matérialiser un produit (*Product*)
+- l'application avec laquelle l'utilisateur va interagir (`App()`)
+- un objet dédié aux opérations avec l'API (`Api())`)
+- une classe dédiée aux interactions avec la base de données (`Database()`)
+- un objet pour la gestion de l'affichage des informations (`Interface()`)
+- un objet pour matérialiser un produit (`Product()`)
 
-En plus de ces objets, le programme est accompagné d'un fichier `init.sql` permettant d'initialiser ou réinitialiser la base de données. De plus, le fichier `settings.py` permet de regrouper un certain nombre de constantes utilisées pour paramétrer certains aspects de l'application (nombre de produits affichés à l'écran, paramètres de connexion à la base de données, chemin de dossier temporaire, etc.)
+En plus de ces classes, le programme est associé à un fichier `init.sql`, permettant d'initialiser ou réinitialiser la base de données.
+
+Un fichier `settings.py` permet de regrouper les constantes utilisées pour paramétrer certains aspects de l'application (nombre de produits affichés à l'écran, paramètres de connexion à la base de données, chemin de dossier temporaire, etc.)
 
 ## Déroulement
 
 Concrètement, le programme se déroule de la manière suivante :
 
-- Au lancement vérification de l'état de la base de données.
+- Au lancement vérification de l'état de la base de données (existante, vide, prête à l'utilisation).
 - Si la base de données est vide, téléchargement des produits depuis l'API d'[Open Food Facts](https://fr.openfoodfacts.org/) et insertion des produits dans la base de données. Puis le programme continue son exécution.
 - Lancement d'un cycle de sélection pour l'utilisateur·rice (choix d'une catégorie, d'un produit puis d'un substitut).
 - Affichage de la fiche produit détaillée pour le substitut sélectionné.
@@ -51,7 +55,7 @@ Les *Users stories* peuvent être consultées sur le Trello suivant : https://tr
 
 ## MySQL
 
-Les bases de données SQL sont des outils très puissants. Elles ont l'avantage, selon moi, d'avoir un fonctionnement de base très facile à prendre en main. Elles restent cependant des outils très puissants permettant de réaliser des recherches très complexes.
+Les bases de données SQL sont des outils très puissants. Elles ont l'avantage, selon moi, d'avoir un fonctionnement de base très facile à prendre en main. Cette simplicité de prise en main n'empêche cependant par la réalisation d'opération complexes.
 
 Dans ce projet, l'exemple le plus marquant est la requête permettant de sélectionner une liste de substitut.
 En effet dans le fonctionnement du programme, un substitut est caractérisé par :
@@ -67,6 +71,8 @@ Il a donc fallu construire cette requête étape par étape en se posant les que
 - quelles tables je vais devoir interroger
 - quels critères de sélection vais-je devoir utiliser
 - comment dois-je organiser les résultats
+
+Le résultat est visible dans la méthode `select_substitutes` de la classe `Database()`.
 
 ## Utilisation d'une API
 
@@ -89,8 +95,10 @@ De manière plus générale ce projet m'a permis d'approfondir encore l'utilisat
 
 La notion de programmation orientée objet étant déjà abordée lors du projet 3 (voir : [Aidez MacGyver à s'échapper !](https://github.com/GuillaumeOj/HelpMacGyver)), ce projet aura était l'occasion de continuer dans cette direction et d'approfondir l'utilisation des classes. Notamment, chose nouvelle pour moi, l'utilisation d'une classe *App* plutôt que l'utilisation d'une fonction *main()* (habitude conservée du début de la formation).
 
-L'aspect sur lequel j'aimerais être plus à l'aise est la gestion des erreurs.
+L'aspect sur lequel j'aimerais être plus à l'aise, à l'avenir, est la gestion des erreurs.
 Dans ce projet, j'ai essayé de faire appel à l'utilisation de la structure `try... except`. Cependant, je ne suis pas toujours sûr de gérer correctement les exceptions potentiellement levée par cette structure.
+
+Ce langage offre chaque jour de nouvelles découvertes !
 
 # Conclusion
 

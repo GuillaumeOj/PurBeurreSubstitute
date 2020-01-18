@@ -40,7 +40,7 @@ author:
 
 ## Trouver un produit sauvegardé
 
-- Affichage des produits sauvegardé avec le produit d'origine
+- Affichage des produits sauvegardés avec le produit d'origine
 - Choisir un produit
 - Affichage de la fiche produit
 

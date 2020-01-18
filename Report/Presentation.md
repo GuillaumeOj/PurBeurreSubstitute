@@ -51,3 +51,29 @@ author:
 - Conserver les produits avec un nutriscore meilleur ou égale
 - Classer du meilleur nutriscore au moins bon
 - Choisir uniquement `X` produit (**10** par défaut)
+
+# Bilan du projet
+
+## MySQL
+
+- Apprentissage rapide sur les bases
+- Apprentissage plus difficile sur une utilisation complexe
+- Construire ses requêtes complexes étapes par étapes
+- Faire le traitement des données au maximum sur la base de données
+
+## API
+
+- En théorie (cours) notions simples
+- En pratique plus complexe, car documentation faible
+- Toujours expérimenter avant de lancer l'utilisation en production
+
+## Python
+
+- Amélioration notable par rapport au projet 3
+- Meilleure utilisation des classes et des méthodes
+- Gestion des erreurs à perfectionner
+- Grosse avancée, le meilleur reste à venir !
+
+## Fin
+
+Merci pour votre attention

@@ -18,7 +18,7 @@ author:
 
 ## Code source
 
-- Python + SQL + Utilisation API
+- Python + SQL + Request
 - Github -> [Pur Beurre Substitute](https://github.com/GuillaumeOj/PurBeurreSubstitute)
 - Arborescence du programme
 
@@ -50,7 +50,7 @@ author:
 - Classer du plus grand au plus petit
 - Conserver les produits avec un nutriscore meilleur ou égale
 - Classer du meilleur nutriscore au moins bon
-- Choisir uniquement `X` produit (**10** par défaut)
+- Choisir uniquement ***10*** produit (valeur par défaut)
 
 # Bilan du projet
 

@@ -1,6 +1,7 @@
 """
     Application using Pur Beurre Substitute
-    This application is made for the project 5 on OpenClassrooms during the Python courses
+    This application is made for the project 5 on OpenClassrooms during the
+    Python courses
     The aim of this project is to use:
         - an API Rest,
         - a database like MySQL,
@@ -8,7 +9,13 @@
 """
 import argparse
 
-from settings import * # pylint: disable=wildcard-import
+from settings import PBS_DB_NAME, PBS_HOST, PBS_USER, PBS_PASSWORD
+from settings import PBS_INIT_FILE
+from settings import API_PAGES, API_PAGE_SIZE, API_CATEGORIES, API_URL_BASE
+from settings import API_DATA_FORMAT
+from settings import NUMBER_OF_PRODUCTS, NUMBER_OF_SIMILAR_CATEGORIES
+from settings import DISCRIMINANT_NUTRISCORE_GRADE, NUMBER_OF_SUBSTITUTES
+from settings import TMP_DIR
 from src.database import Database
 from src.product import Product
 from src.interface import SelectionMenu
@@ -27,7 +34,7 @@ class App():
         parser = argparse.ArgumentParser()
         parser.add_argument('-i',
                             '--initdb',
-                            help='Initialize the Pur Beurre Substitute database',
+                            help='Initialize the database',
                             action='store_true')
         arguments = parser.parse_args()
 
@@ -35,12 +42,12 @@ class App():
         self.database = Database(PBS_DB_NAME, PBS_USER, PBS_HOST, PBS_PASSWORD)
         self.database.connect_database()
 
-        # If the user use 'initdb' as argument, the application call a method in Database
+        # If the user use 'initdb' as argument, call a method in Database
         # for reading the 'init.sql' file
         if arguments.initdb:
             # Confirmation message for safety and avoid 'initdb' by mistake
-            menu_title = 'Êtes-vous sûr de vouloir initialiser la base de données à ses valeurs'
-            menu_title = f'{menu_title} par défaut ?'
+            menu_title = 'Êtes-vous sûr de vouloir réinitialiser la base de'
+            menu_title += ' données ?'
             answers_title = 'Sélectionnez une réponse (numéro)'
             answers = ['Oui', 'Non']
 
@@ -56,14 +63,14 @@ class App():
         if self.database.check_database() is None:
             self.first_start()
 
-        continue_app = True
-        while continue_app:
+        while True:
             # Ask the user if he wants:
             # - Find a substitute for a product
             # - Read a substitute already save in the database
             menu_title = 'Que souhaitez-vous faire'
             answers_title = 'Sélectionnez une option (numéro)'
-            answers = ['Substituer un aliment', 'Retrouver un aliment déjà substitué']
+            answers = ['Substituer un aliment',
+                       'Retrouver un aliment déjà substitué']
 
             app_usage = SelectionMenu(menu_title, answers_title, answers)
 
@@ -80,9 +87,7 @@ class App():
             continue_app = SelectionMenu(menu_title, answers_title, answers)
 
             if continue_app.selected == 'Non':
-                continue_app = False
-            else:
-                continue_app = True
+                break
 
         self.database.close_database()
 
@@ -90,15 +95,17 @@ class App():
         """
             This method initialise the database if its empty
         """
-        print('\n========== Première exécution de l\'application ===========')
-        print('\n==> Téléchargement des données depuis l\'Open Food Facts')
+        print('')
+        print('========== Première exécution de l\'application ===========')
+        print('==> Téléchargement des données depuis l\'Open Food Facts')
 
         # Initialize the API
         api = Api(API_URL_BASE, TMP_DIR)
 
         # Download data with the API
         api.download_products(API_CATEGORIES, API_PAGE_SIZE, API_PAGES)
-        print('\n==> Téléchargement des données terminé !')
+        print('')
+        print('==> Téléchargement des données terminé !')
 
         # Read data downloaded and clean uncompleted products
         api.read_json_with_key('products')
@@ -126,15 +133,15 @@ class App():
 
         category = SelectionMenu(menu_title, answers_title, answers)
 
-
         # Ask user to choose a product to substitute
         to_substitute = None
 
         while not to_substitute:
             # Display available products in the chossen category
-            available_products = self.database.select_products(category.selected,
-                                                               NUMBER_OF_PRODUCTS,
-                                                               DISCRIMINANT_NUTRISCORE_GRADE)
+            available_products = self.database.select_products(
+                category.selected,
+                NUMBER_OF_PRODUCTS,
+                DISCRIMINANT_NUTRISCORE_GRADE)
             available_products.append('Afficher d\'autres produits au hasard')
             menu_title = 'Choisissez un produit à subsituer'
             answers_title = 'Sélectionnez un produit (numéro)'
@@ -143,12 +150,13 @@ class App():
             product = SelectionMenu(menu_title, answers_title, answers)
 
             if product.selected != 'Afficher d\'autres produits au hasard':
-                to_substitute = Product(**self.database.select_product(product.selected))
+                to_substitute = Product(
+                    **self.database.select_product(product.selected))
 
-        # Select in the database the potential substitutes for to the selected product
-        available_substitutes = self.database.select_substitutes(to_substitute,
-                                                                 NUMBER_OF_SIMILAR_CATEGORIES,
-                                                                 NUMBER_OF_SUBSTITUTES)
+        # Select in the database the potential substitutes for to the selected
+        # product
+        available_substitutes = self.database.select_substitutes(
+            to_substitute, NUMBER_OF_SIMILAR_CATEGORIES, NUMBER_OF_SUBSTITUTES)
 
         if available_substitutes:
             # Ask the user to choose a substitute
@@ -158,7 +166,8 @@ class App():
 
             substitute = SelectionMenu(menu_title, answers_title, answers)
 
-            substituted = Product(**self.database.select_product(substitute.selected))
+            substituted = Product(
+                **self.database.select_product(substitute.selected))
             substituted.display()
         else:
             print('Nous n\'avons pas de substitut à vous proposer.')
@@ -195,7 +204,8 @@ class App():
 
         if substituted:
             # Display the selected subsitute
-            product = Product(**self.database.select_product(substituted.selected))
+            product = Product(
+                **self.database.select_product(substituted.selected))
             product.display()
 
 
